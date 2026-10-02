@@ -39,17 +39,19 @@ export default function FilterBar({ options, value, onChange }: Props) {
               {options[key].map((item) => (
                 <label
                   key={item}
-                  className={`flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full border px-3 text-sm ${
+                  className={`flex min-h-[44px] cursor-pointer items-center rounded-full border px-3 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent/60 ${
                     value[key].includes(item)
                       ? 'border-accent/60 bg-accent-dim/40 text-accent'
                       : 'border-space-700 text-slate-300 hover:border-accent/40 hover:bg-space-900'
                   }`}
                 >
+                  {/* sr-only: the chip itself is the control — no native box,
+                      but the input stays for click handling + a11y state. */}
                   <input
                     type="checkbox"
                     checked={value[key].includes(item)}
                     onChange={() => toggle(key, item)}
-                    className="h-3.5 w-3.5"
+                    className="sr-only"
                   />
                   {item}
                 </label>
