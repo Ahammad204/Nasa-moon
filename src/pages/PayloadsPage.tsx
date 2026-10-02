@@ -19,17 +19,21 @@ export default function PayloadsPage() {
 
   return (
     <section>
-      <h1 className="mb-2 text-2xl font-bold">Payload explorer</h1>
-      <p className="mb-6 text-sm text-slate-400">
-        <CountUp value={GROUPS.length} /> payloads across <CountUp value={missions.length} /> CLPS
-        deliveries. Payload names are shown
-        exactly as their sources spell them, so variants stay separate. CT-4, CS-8 and CX-2 have no
-        payload details published yet.
-      </p>
-      <p className="-mt-4 mb-2 text-xs text-slate-400">
-        Behind you, the 3D relationship graph: click a mission node to open that mission, or a
-        payload node to jump to its card below.
-      </p>
+      {/* Scrim: the root canvas renders the graph behind this copy — at
+          phone widths the text sat right on top of the 3D lines. */}
+      <div className="mb-5 rounded-lg bg-space-950/70 p-4 backdrop-blur-sm">
+        <h1 className="mb-2 text-2xl font-bold">Payload explorer</h1>
+        <p className="mb-2 text-sm text-slate-400">
+          <CountUp value={GROUPS.length} /> payloads across <CountUp value={missions.length} /> CLPS
+          deliveries. Payload names are shown
+          exactly as their sources spell them, so variants stay separate. CT-4, CS-8 and CX-2 have no
+          payload details published yet.
+        </p>
+        <p className="text-xs text-slate-400">
+          Behind you, the 3D relationship graph: click a mission node to open that mission, or a
+          payload node to jump to its card below.
+        </p>
+      </div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <div className="h-[38vh] flex-1 rounded-lg border border-dashed border-space-700/60" aria-hidden="true" />
         <div className="pointer-events-auto flex flex-col gap-2">

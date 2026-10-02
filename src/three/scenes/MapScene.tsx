@@ -131,7 +131,10 @@ export default function MapScene() {
       // moon radius = 0.36·viewportH at scale 1; the group's world −y offset d
       // shifts it down by 0.1715·d·viewportH pixels. Solve d so the sphere's
       // top edge lands `clearPx` below the viewport top (header + H1 row).
-      const compact = size.width < 768;
+      // window.innerWidth (not the canvas size): media queries see the
+      // viewport WITH scrollbar, the canvas sees it without — using canvas
+      // width would flip this framing ~15px early/late vs the CSS layout.
+      const compact = window.innerWidth < 768;
       const rFrac = (compact ? 0.72 : 1) * 0.36;
       const clearPx = compact ? 300 : 165;
       const d = Math.max(0, Math.min(2, (clearPx / size.height - 0.5 + rFrac) / 0.1715));
