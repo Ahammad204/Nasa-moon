@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.env
+.env.*
+.DS_Store
+*.log
+coverage/
+.vercel/
+
+# PREP-phase experiments, never merged
+scratch/
+/scratch
+
+# AI-session working docs (local only, not site code)
+HANDOFF.md
+AGENT.md
+tasks/
+plans/
+docs/
+scripts/
+
