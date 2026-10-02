@@ -7,6 +7,8 @@ and sources — built as a static React app over verified NASA/USGS data.
 > Independent educational project for NASA Space Apps Challenge 2026 (Bangladesh).
 > Not affiliated with or endorsed by NASA.
 
+**Live:** https://clps-agent-kit.vercel.app
+
 ## Screenshots
 
 | Mission list | Moon map | Compare (mobile) |
