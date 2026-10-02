@@ -4,12 +4,15 @@ import * as THREE from 'three';
 import { hasMapPosition, missions } from '../../lib/missions';
 import MoonModel from '../primitives/MoonModel';
 import { latLonToVector3, MARKER_GEO, MARKER_MAT } from '../primitives/Marker3D';
+import { scene } from '../sceneStore';
 
 // Home hero: wireframe moon with real landing-site markers (correct-ish relative
-// positions from the dataset). The whole group spins so markers stay put on their
-// features. Ambience — interaction lives on the Map (L03).
+// positions from the dataset). The whole group spins so markers stay put on
+// their features — and the hero slot above it is a drag handle (scene.hero), so
+// the user can grab the moon directly; the auto-spin eases back after release.
 export default function HomeScene() {
   const groupRef = useRef<THREE.Group>(null);
+  const spinRef = useRef(0.05);
 
   const markers = useMemo(
     () =>
@@ -42,7 +45,24 @@ export default function HomeScene() {
   const compact = vw < 768;
 
   useFrame((_, dt) => {
-    if (groupRef.current) groupRef.current.rotation.y += dt * 0.05;
+    const g = groupRef.current;
+    if (!g) return;
+    const h = scene.hero;
+    // Apply any pending pointer deltas first — even if the release happened
+    // before this frame ran, the movement must not be dropped.
+    g.rotation.y += h.dyaw;
+    g.rotation.x = Math.max(-0.9, Math.min(0.9, g.rotation.x + h.dpitch));
+    h.dyaw = 0;
+    h.dpitch = 0;
+    if (h.dragging) {
+      spinRef.current = 0;
+    } else {
+      // Ease back into the auto-rotate instead of snapping to it, and settle
+      // any drag-induced tilt back to upright.
+      spinRef.current += (0.05 - spinRef.current) * Math.min(1, dt * 3);
+      g.rotation.y += dt * spinRef.current;
+      g.rotation.x += (0 - g.rotation.x) * Math.min(1, dt * 1.5);
+    }
   });
 
   const aspect = size.width / size.height;

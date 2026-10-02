@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useMotionPrefs } from '../lib/motionPrefs';
 import { hasWebGL } from '../lib/webgl';
+import { scene } from '../three/sceneStore';
 import HeroMoonFallback from './HeroMoonFallback';
 
 const TITLE_WORDS = ['CLPS', 'Lunar', 'Mission', 'Browser'];
@@ -10,10 +11,43 @@ function HeroVisual() {
   const show3d = hasWebGL() && !reduced;
   // The 3D moon lives in the shared SpaceCanvas behind this slot; the CSS moon
   // is the reduced-motion / no-WebGL fallback (and reserves the layout height).
-  return show3d ? (
-    <div className="mx-auto h-56 w-56 sm:h-72 sm:w-72" aria-hidden="true" />
-  ) : (
-    <HeroMoonFallback />
+  if (!show3d) return <HeroMoonFallback />;
+
+  // Drag handle over the moon's layout slot: deltas go to the shared canvas
+  // (scene.hero → HomeScene). touch-none so a finger drag rotates the moon
+  // instead of scrolling the page; the rest of the page keeps normal touch.
+  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    const h = scene.hero;
+    h.dragging = true;
+    h.px = e.clientX;
+    h.py = e.clientY;
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // synthetic/test pointers have no active pointer to capture
+    }
+  };
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const h = scene.hero;
+    if (!h.dragging) return;
+    h.dyaw += (e.clientX - h.px) * 0.006;
+    h.dpitch += (e.clientY - h.py) * 0.004;
+    h.px = e.clientX;
+    h.py = e.clientY;
+  };
+  const onUp = () => {
+    scene.hero.dragging = false;
+  };
+  return (
+    <div
+      className="mx-auto h-56 w-56 cursor-grab touch-none active:cursor-grabbing sm:h-72 sm:w-72 md:w-full"
+      aria-hidden="true"
+      onPointerDown={onDown}
+      onPointerMove={onMove}
+      onPointerUp={onUp}
+      onPointerCancel={onUp}
+      onLostPointerCapture={onUp}
+    />
   );
 }
 

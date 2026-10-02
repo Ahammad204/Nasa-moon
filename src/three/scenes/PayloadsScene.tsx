@@ -119,13 +119,19 @@ export default function PayloadsScene() {
     const up = () => {
       dragging = false;
     };
+    // Same fix as MapScene: finger drags must rotate the graph, not scroll
+    // the page (pointercancel would otherwise kill the drag mid-gesture).
+    el.style.touchAction = 'none';
     el.addEventListener('pointerdown', down);
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
     return () => {
       el.removeEventListener('pointerdown', down);
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      el.style.touchAction = '';
     };
   }, [gl]);
 

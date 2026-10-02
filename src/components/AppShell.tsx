@@ -115,7 +115,7 @@ export default function AppShell() {
           >
             CLPS Lunar Mission Browser
           </NavLink>
-          <nav className="hidden flex-wrap gap-1 md:flex">
+          <nav className="ml-auto hidden flex-wrap gap-1 md:flex">
             {NAV.map(({ to, label }) => (
               <NavLink
                 key={to}
@@ -133,9 +133,6 @@ export default function AppShell() {
               </NavLink>
             ))}
           </nav>
-          <div className="ml-auto hidden items-center md:flex">
-            <ReduceMotionToggle />
-          </div>
           <button
             type="button"
             data-mobile-menu
@@ -178,16 +175,13 @@ export default function AppShell() {
                         : 'text-slate-300 hover:bg-space-900'
                     }`
                   }
-                >
-                  {label}
-                </NavLink>
-              ))}
-            </nav>
-            <div className="mt-2 flex">
-              <ReduceMotionToggle />
-            </div>
-          </div>
-        )}
+              >
+                {label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      )}
       </header>
 
       <main className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 py-6">
@@ -215,6 +209,10 @@ export default function AppShell() {
           <p className="mt-2 text-slate-400">
             An independent educational project — not affiliated with or endorsed by NASA.
           </p>
+          {/* Moved here from the header (boss: declutter) — still one click away. */}
+          <div className="mt-3">
+            <ReduceMotionToggle />
+          </div>
         </div>
       </footer>
       <CompareTray />

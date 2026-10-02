@@ -20,6 +20,14 @@ export const scene = {
     cmd: null as string | null,
     selectedId: null as string | null,
   },
+  // Hero moon drag (slot overlay in HeroSection → HomeScene render loop).
+  hero: {
+    dragging: false,
+    dyaw: 0,
+    dpitch: 0,
+    px: 0,
+    py: 0,
+  },
 };
 
 interface Flags {

@@ -96,13 +96,20 @@ export default function MapScene() {
       el.style.cursor = 'grab';
     };
     el.style.cursor = 'grab';
+    // Without this the browser treats a finger drag as a page-scroll gesture,
+    // fires pointercancel mid-drag and the globe stops following the finger
+    // (mouse is unaffected — that's why desktop always worked).
+    el.style.touchAction = 'none';
     el.addEventListener('pointerdown', down);
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
     return () => {
       el.removeEventListener('pointerdown', down);
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      el.style.touchAction = '';
       el.style.cursor = '';
     };
   }, [gl]);
