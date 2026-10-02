@@ -35,7 +35,7 @@ export default function PayloadsPage() {
         </p>
       </div>
       <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="h-[38vh] flex-1 rounded-lg border border-dashed border-space-700/60" aria-hidden="true" />
+        <div className="h-[38vh] flex-1" aria-hidden="true" />
         <div className="pointer-events-auto flex flex-col gap-2">
           <button
             type="button"
