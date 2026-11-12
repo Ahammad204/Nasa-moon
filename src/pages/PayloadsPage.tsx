@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CountUp from '../components/CountUp';
+import PayloadGraphPanel from '../components/PayloadGraphPanel';
 import { missions } from '../lib/missions';
 import { groupPayloads } from '../lib/payloads';
-import { requestGlobeCmd, useSceneFlags } from '../three/sceneStore';
+import { useSceneFlags } from '../three/sceneStore';
 
 const GROUPS = groupPayloads(missions);
 
@@ -19,9 +20,7 @@ export default function PayloadsPage() {
 
   return (
     <section>
-      {/* Scrim: the root canvas renders the graph behind this copy — at
-          phone widths the text sat right on top of the 3D lines. */}
-      <div className="mb-5 rounded-lg bg-space-950/70 p-4 backdrop-blur-sm">
+      <div className="mb-5">
         <h1 className="mb-2 text-2xl font-bold">Payload explorer</h1>
         <p className="mb-2 text-sm text-slate-400">
           <CountUp value={GROUPS.length} /> payloads across <CountUp value={missions.length} /> CLPS
@@ -30,31 +29,12 @@ export default function PayloadsPage() {
           payload details published yet.
         </p>
         <p className="text-xs text-slate-400">
-          Behind you, the 3D relationship graph: click a mission node to open that mission, or a
-          payload node to jump to its card below.
+          The relationship graph below links missions to the payloads they carry: click a mission
+          node to open that mission, or a payload node to jump to its card below.
         </p>
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <div className="h-[38vh] flex-1" aria-hidden="true" />
-        <div className="pointer-events-auto flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={() => requestGlobeCmd('in')}
-            className="min-h-[44px] rounded-md border border-space-700 px-3 text-sm hover:bg-space-900"
-          >
-            Zoom in
-          </button>
-          <button
-            type="button"
-            onClick={() => requestGlobeCmd('out')}
-            className="min-h-[44px] rounded-md border border-space-700 px-3 text-sm hover:bg-space-900"
-          >
-            Zoom out
-          </button>
-          <p className="text-xs text-slate-400">drag to rotate</p>
-        </div>
-      </div>
-      <div className="pointer-events-auto space-y-4">
+      <PayloadGraphPanel />
+      <div className="space-y-4">
         {GROUPS.map((g) => (
           <article
             key={g.name}

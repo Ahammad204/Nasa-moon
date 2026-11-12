@@ -137,6 +137,15 @@ export default function PayloadsScene() {
 
   useFrame((_, dt) => {
     if (!groupRef.current) return;
+    // Zoom commands from the panel buttons (same pattern as MapScene: the
+    // shared canvas used to own this scene, and nobody consumed the command
+    // here — the old Zoom buttons did nothing).
+    const g = scene.globe;
+    if (g.cmd) {
+      if (g.cmd === 'in') g.zoom = Math.max(3.6, g.zoom - 0.8);
+      if (g.cmd === 'out') g.zoom = Math.min(9, g.zoom + 0.8);
+      g.cmd = null;
+    }
     scene.globe.yaw += dt * 0.04;
     groupRef.current.rotation.y = scene.globe.yaw;
     groupRef.current.rotation.x = scene.globe.pitch * 0.5;

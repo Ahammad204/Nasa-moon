@@ -74,7 +74,8 @@ export default function AppShell() {
 
   // Interactive 3D routes: page boxes must let pointer events fall through to
   // the canvas; interactive DOM clusters re-enable themselves with pe-auto.
-  const interactiveRoute = (routeKey === 'map' && mapMode === 'globe') || routeKey === 'payloads';
+  // (Payloads used to be one; its graph now lives in its own panel canvas.)
+  const interactiveRoute = routeKey === 'map' && mapMode === 'globe';
 
   // 3D → router bridge (mission nodes in scenes ask to navigate).
   useEffect(() => {

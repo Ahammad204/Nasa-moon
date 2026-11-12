@@ -4,7 +4,6 @@ import SceneDirector, { type RouteKey } from './SceneDirector';
 import Starfield3D from './primitives/Starfield3D';
 import HomeScene from './scenes/HomeScene';
 import MapScene from './scenes/MapScene';
-import PayloadsScene from './scenes/PayloadsScene';
 import { attachSceneInputs, useSceneFlags, useSceneQuality } from './sceneStore';
 
 function starCount(quality: number): number {
@@ -21,8 +20,10 @@ export default function SpaceCanvas({ route }: { route: RouteKey }) {
   useEffect(() => attachSceneInputs(), []);
 
   // Interactive routes get pointer events (globe drag, node clicks);
-  // ambience-only routes never block the DOM underneath.
-  const interactive = (route === 'map' && mapMode === 'globe') || route === 'payloads';
+  // ambience-only routes never block the DOM underneath. The payloads graph
+  // lives in its own panel canvas now (PayloadGraphPanel), so this canvas
+  // is ambience-only on that route too.
+  const interactive = route === 'map' && mapMode === 'globe';
 
   return (
     <div
@@ -40,7 +41,6 @@ export default function SpaceCanvas({ route }: { route: RouteKey }) {
           <Starfield3D count={starCount(quality)} />
           {route === 'home' && <HomeScene />}
           {route === 'map' && mapMode === 'globe' && <MapScene />}
-          {route === 'payloads' && <PayloadsScene />}
         </SceneDirector>
       </Canvas>
     </div>
