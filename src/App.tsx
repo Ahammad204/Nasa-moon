@@ -12,6 +12,8 @@ import PayloadsPage from './pages/PayloadsPage';
 
 // Lazy: Leaflet + react-leaflet stay out of the first bundle (NFR-2).
 const MapPage = lazy(() => import('./pages/MapPage'));
+// Lazy: Three.js + Recharts for the Sun & Earth Navigator stay out too.
+const NavigatorPage = lazy(() => import('./pages/NavigatorPage'));
 
 export default function App() {
   return (
@@ -23,6 +25,7 @@ export default function App() {
           <Route path="/missions" element={<ListPage />} />
             <Route path="/map" element={<MapPage />} />
             <Route path="/mission/:id" element={<MissionDetailPage />} />
+            <Route path="/navigator" element={<NavigatorPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/payloads" element={<PayloadsPage />} />
             <Route path="*" element={<NotFoundPage />} />

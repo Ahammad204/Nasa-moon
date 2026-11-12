@@ -11,7 +11,20 @@ import MoonMesh from './MoonMesh';
 const MODEL_URL = '/models/moon.glb';
 const MODEL_R = 500;
 
-function TexturedMoon({ radius, spin }: { radius: number; spin: number }) {
+function TexturedMoon({
+  radius,
+  spin,
+  lights = true,
+}: {
+  radius: number;
+  spin: number;
+  /**
+   * The Sun & Earth Navigator (Phase 2) drives the lighting itself from the
+   * real Sun direction, so it turns the model's fixed key/fill lights off.
+   * Every other scene keeps the default lights.
+   */
+  lights?: boolean;
+}) {
   const { scene } = useGLTF(MODEL_URL);
   const spinRef = useRef<THREE.Group>(null);
 
@@ -32,10 +45,14 @@ function TexturedMoon({ radius, spin }: { radius: number; spin: number }) {
 
   return (
     <group>
-      {/* Same rig as the procedural moon so the swap doesn't rebalance the scene. */}
-      <directionalLight position={[7, 2.5, 1.2]} intensity={2.6} color="#fff7ea" />
-      <directionalLight position={[-6, -2, -3]} intensity={0.15} color="#3a5a7a" />
-      <ambientLight intensity={0.07} color="#6d87a3" />
+      {lights && (
+        <>
+          {/* Same rig as the procedural moon so the swap doesn't rebalance the scene. */}
+          <directionalLight position={[7, 2.5, 1.2]} intensity={2.6} color="#fff7ea" />
+          <directionalLight position={[-6, -2, -3]} intensity={0.15} color="#3a5a7a" />
+          <ambientLight intensity={0.07} color="#6d87a3" />
+        </>
+      )}
       <group ref={spinRef}>
         <group scale={radius / MODEL_R}>
           <primitive object={model} />
@@ -48,13 +65,15 @@ function TexturedMoon({ radius, spin }: { radius: number; spin: number }) {
 export default function MoonModel({
   radius = 1.6,
   spin = 0,
+  lights = true,
 }: {
   radius?: number;
   spin?: number;
+  lights?: boolean;
 }) {
   return (
     <Suspense fallback={<MoonMesh radius={radius} spin={spin} />}>
-      <TexturedMoon radius={radius} spin={spin} />
+      <TexturedMoon radius={radius} spin={spin} lights={lights} />
     </Suspense>
   );
 }

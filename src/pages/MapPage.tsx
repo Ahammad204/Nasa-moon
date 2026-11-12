@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import MapMarkers from '../components/MapMarkers';
 import MoonMap from '../components/MoonMap';
+import SunEarthPanel from '../components/navigator/SunEarthPanel';
 import StatusBadge from '../components/StatusBadge';
 import { getMissionById, hasMapPosition, missions } from '../lib/missions';
 import type { Mission } from '../lib/types';
@@ -61,9 +62,27 @@ export default function MapPage() {
   const unplaced = missions.filter((m) => !hasMapPosition(m));
   const activeId = mapMode === 'globe' ? selectedId : leafletSel;
   const isGlobe = mapMode === 'globe' && can3D;
+  // The Sun & Earth panel follows whichever selection is live in the
+  // current mode (globe scene flags vs. the flat Leaflet selection).
+  const activeMission = isGlobe
+    ? selected
+    : leafletSel
+      ? getMissionById(leafletSel)
+      : undefined;
 
   const belowLists = (
     <>
+      {activeMission?.landingSite?.latitude != null &&
+        activeMission.landingSite.longitude != null && (
+          <SunEarthPanel
+            site={{
+              latitude: activeMission.landingSite.latitude,
+              longitude: activeMission.landingSite.longitude,
+            }}
+            siteName={activeMission.landingSite.name ?? activeMission.name}
+            missionId={activeMission.id}
+          />
+        )}
       <h2 className="mb-2 mt-6 text-lg font-semibold">On this map ({placed.length})</h2>
       <ul className="pointer-events-auto mb-6 space-y-2">
         {placed.map((m) => (

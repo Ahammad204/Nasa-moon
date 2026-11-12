@@ -16,6 +16,7 @@ const NAV = [
   { to: '/', label: 'Home' },
   { to: '/missions', label: 'Missions' },
   { to: '/map', label: 'Map' },
+  { to: '/navigator', label: 'Navigator' },
   { to: '/compare', label: 'Compare' },
   { to: '/payloads', label: 'Payloads' },
 ];

@@ -13,6 +13,12 @@ export default {
           800: '#1c2740',
           700: '#263349',
         },
+        // Sun & Earth Navigator accents (Phase 2): warm Sun amber, Earth
+        // blue is the existing `accent` (#38BDF8).
+        sun: {
+          DEFAULT: '#FBBF24',
+          dim: '#78350f',
+        },
         // Single accent — the signal color for CTA / links / active states.
         accent: {
           DEFAULT: '#38bdf8',
