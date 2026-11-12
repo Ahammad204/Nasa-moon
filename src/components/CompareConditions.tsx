@@ -149,17 +149,22 @@ export default function SiteConditionsSection({
         feature centres.
       </p>
 
-      {/* Desktop table */}
-      <div className="hidden overflow-x-auto md:block">
-        <table className="w-full border-collapse text-sm">
+      {/* Desktop table — differing values get a dot, amber text and a short
+          left accent on the content itself, never a wash across the cell. */}
+      <div className="hidden overflow-x-auto rounded-xl border border-space-800 bg-space-900/60 md:block">
+        <table className="w-full min-w-[540px] border-collapse text-sm">
           <thead>
-            <tr>
-              <th className="sticky left-0 z-10 border-b border-space-700 bg-space-950 p-3 text-left font-medium text-slate-400">
+            <tr className="border-b border-space-700">
+              <th className="w-36 p-3 text-left font-medium text-slate-400 sm:w-44">
                 Condition
               </th>
               {conditions.map((c) => (
-                <th key={c.mission.id} className="border-b border-space-700 p-3 text-left align-top">
-                  <span className="block font-semibold">{c.mission.name}</span>
+                <th
+                  key={c.mission.id}
+                  scope="col"
+                  className="p-3 text-left align-top"
+                >
+                  <span className="block font-semibold text-slate-100">{c.mission.name}</span>
                   <span className="mt-1 block">
                     <RankChips condition={c} />
                   </span>
@@ -169,24 +174,39 @@ export default function SiteConditionsSection({
           </thead>
           <tbody>
             {metrics.map((metric) => (
-              <tr key={metric.key}>
-                <th className="sticky left-0 z-10 border-b border-space-800 bg-space-950 p-3 text-left font-normal text-slate-400">
+              <tr key={metric.key} className="border-b border-space-800 last:border-b-0">
+                <th
+                  scope="row"
+                  className="p-3 text-left align-top font-normal text-slate-400"
+                >
                   {metric.label}
                 </th>
                 {conditions.map((c) => {
                   const value = metric.value(c);
+                  const isDiff = diff.has(metric.key);
                   return (
-                    <td
-                      key={c.mission.id}
-                      className={`border-b border-space-800 p-3 align-top ${
-                        diff.has(metric.key) ? 'bg-signal-warn/10 text-signal-warn' : 'text-slate-200'
-                      }`}
-                    >
+                    <td key={c.mission.id} className="p-3 align-top">
                       {value === null ? (
                         <span className="text-slate-400">— no verified coordinates</span>
                       ) : (
-                        <span className="block space-y-1">
-                          <span className="tabular-nums">{value}</span>
+                        <span
+                          className={`block space-y-1 ${
+                            isDiff ? 'border-l-2 border-signal-warn pl-2' : ''
+                          }`}
+                        >
+                          <span
+                            className={`tabular-nums ${
+                              isDiff ? 'text-signal-warn' : 'text-slate-200'
+                            }`}
+                          >
+                            {isDiff && (
+                              <span
+                                aria-hidden="true"
+                                className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-signal-warn align-middle"
+                              />
+                            )}
+                            {value}
+                          </span>
                           <ConditionBar pct={metric.pct(c)} barClass={metric.barClass} />
                         </span>
                       )}

@@ -8,7 +8,7 @@ export default function CompareTray() {
 
   return (
     <div
-      className="pointer-events-auto fixed inset-x-0 bottom-0 z-[1200] border-t border-space-700 bg-space-900/95 px-4 py-3"
+      className="pointer-events-auto fixed inset-x-0 bottom-0 z-[1200] border-t border-space-700 bg-space-900 px-4 py-3 shadow-[0_-8px_24px_rgba(0,0,0,0.55)]"
       role="status"
     >
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-2 text-sm">

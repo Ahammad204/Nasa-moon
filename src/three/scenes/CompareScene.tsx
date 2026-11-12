@@ -18,11 +18,11 @@ function difference(a: string, b: string): number {
   return a === b ? 0 : 1;
 }
 
-// Spatial compare (L04): each selected mission is a depth-staggered column of
-// field nodes (7 per mission, real COMPARE_FIELDS order). Connectors between
-// columns carry MEANING: color intensity ∝ how different the two values are
-// (numeric delta where possible, otherwise 0=same / 1=different). The DOM table
-// below remains the accessible source of truth.
+// Spatial compare (L04) — CURRENTLY UNMOUNTED (2026-11-12). Its connector
+// lines and spheres rendered on the shared fixed canvas behind the Compare
+// page and bled through the DOM table, so SpaceCanvas no longer mounts it
+// and ComparePage no longer mirrors ids into sceneStore. The DOM comparison
+// is the source of truth. Delete this file if no route re-adopts it.
 export default function CompareScene() {
   const { compareIds } = useSceneFlags();
   const spinRef = useRef<THREE.Group>(null);

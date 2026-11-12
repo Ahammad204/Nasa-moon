@@ -2,7 +2,6 @@ import { Canvas } from '@react-three/fiber';
 import { useEffect } from 'react';
 import SceneDirector, { type RouteKey } from './SceneDirector';
 import Starfield3D from './primitives/Starfield3D';
-import CompareScene from './scenes/CompareScene';
 import HomeScene from './scenes/HomeScene';
 import MapScene from './scenes/MapScene';
 import PayloadsScene from './scenes/PayloadsScene';
@@ -18,7 +17,7 @@ function starCount(quality: number): number {
 // route changes only re-render the scene contents/camera targets inside it.
 export default function SpaceCanvas({ route }: { route: RouteKey }) {
   const quality = useSceneQuality();
-  const { mapMode, compareIds } = useSceneFlags();
+  const { mapMode } = useSceneFlags();
   useEffect(() => attachSceneInputs(), []);
 
   // Interactive routes get pointer events (globe drag, node clicks);
@@ -41,7 +40,6 @@ export default function SpaceCanvas({ route }: { route: RouteKey }) {
           <Starfield3D count={starCount(quality)} />
           {route === 'home' && <HomeScene />}
           {route === 'map' && mapMode === 'globe' && <MapScene />}
-          {route === 'compare' && compareIds.length >= 2 && <CompareScene />}
           {route === 'payloads' && <PayloadsScene />}
         </SceneDirector>
       </Canvas>
