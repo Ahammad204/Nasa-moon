@@ -386,7 +386,7 @@ export default function NavigatorPage() {
             stats={stats}
           />
           <details className="rounded-lg border border-space-800 bg-space-900 p-4 text-sm shadow-panel">
-            <summary className="cursor-pointer font-medium text-slate-200">
+            <summary className="flex min-h-[44px] cursor-pointer items-center font-medium text-slate-200">
               Method &amp; assumptions
             </summary>
             <div className="mt-2 space-y-2 text-slate-300">

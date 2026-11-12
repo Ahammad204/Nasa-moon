@@ -38,7 +38,7 @@ export default function FaqSection() {
             key={item.q}
             className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel"
           >
-            <summary className="cursor-pointer text-base font-semibold text-slate-100">
+            <summary className="flex min-h-[44px] cursor-pointer items-center text-base font-semibold text-slate-100">
               {item.q}
             </summary>
             <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.a}</p>

@@ -569,7 +569,7 @@ export default function SouthPolePage() {
 
       {/* Sources — tucked away, still complete. */}
       <details className="mt-6 rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">
-        <summary className="cursor-pointer font-semibold text-slate-100">
+        <summary className="flex min-h-[44px] cursor-pointer items-center font-semibold text-slate-100">
           📚 Sources &amp; verification ({southPoleSites.length} sites)
         </summary>
         <ul className="mt-3 space-y-2 text-sm">
