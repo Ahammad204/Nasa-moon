@@ -6,6 +6,7 @@ import {
   lightTimeSeconds,
   moonWeightRatio,
   roundTripLightTimeSeconds,
+  scaleReadingKg,
   weightOn,
 } from './physics';
 
@@ -18,6 +19,23 @@ describe('moon physics (Science Context)', () => {
   it('1 kg weighs 1.62 N on the Moon and 9.81 N on Earth', () => {
     expect(weightOn('moon', 1)).toBeCloseTo(1.62, 2);
     expect(weightOn('earth', 1)).toBeCloseTo(9.81, 2);
+  });
+
+  it('a scale reads about 11.6 kg for 70 kg on the Moon, 70.0 kg on Earth', () => {
+    expect(scaleReadingKg('moon', 70)).toBeCloseTo(11.6, 1);
+    expect(scaleReadingKg('earth', 70)).toBeCloseTo(70.0, 1);
+  });
+
+  it('a scale reads about 3.3 kg for 20 kg on the Moon, 0.2 kg for 1 kg', () => {
+    expect(scaleReadingKg('moon', 20)).toBeCloseTo(3.3, 1);
+    expect(scaleReadingKg('earth', 20)).toBeCloseTo(20.0, 1);
+    expect(scaleReadingKg('moon', 1)).toBeCloseTo(0.2, 1);
+    expect(scaleReadingKg('earth', 1)).toBeCloseTo(1.0, 1);
+  });
+
+  it('a scale reads 0 kg for 0 kg on both bodies', () => {
+    expect(scaleReadingKg('moon', 0)).toBe(0);
+    expect(scaleReadingKg('earth', 0)).toBe(0);
   });
 
   it('0 kg weighs 0 N on both bodies', () => {

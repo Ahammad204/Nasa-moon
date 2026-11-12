@@ -40,6 +40,16 @@ export function moonWeightRatio(): number {
   return MOON_GRAVITY / EARTH_GRAVITY;
 }
 
+/**
+ * What a scale would read, in kilograms, for a mass on the Moon or Earth.
+ * A scale measures force and divides by Earth's gravity, so this is the
+ * weight in newtons divided by EARTH_GRAVITY — about 0.1656 × mass on the
+ * Moon, exactly the mass on Earth. The mass itself never changes.
+ */
+export function scaleReadingKg(body: GravityBody, massKg: number): number {
+  return weightOn(body, massKg) / EARTH_GRAVITY;
+}
+
 /** One-way light travel time in seconds for a distance in km. */
 export function lightTimeSeconds(distanceKm: number): number {
   assertFiniteNonNegative(distanceKm, 'distanceKm');

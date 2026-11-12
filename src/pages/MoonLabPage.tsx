@@ -7,6 +7,7 @@ import {
   EARTH_GRAVITY,
   earthMoonLightTimeSeconds,
   earthMoonRoundTripSeconds,
+  scaleReadingKg,
   weightOn,
 } from '../lib/physics/physics';
 
@@ -22,6 +23,7 @@ function WeightBar({
   label,
   icon,
   newtons,
+  scaleKg,
   maxNewtons,
   barClass,
   textClass,
@@ -30,6 +32,8 @@ function WeightBar({
   label: string;
   icon: string;
   newtons: number;
+  /** What a scale would read for this weight, in kg. */
+  scaleKg: number;
   maxNewtons: number;
   barClass: string;
   textClass: string;
@@ -44,13 +48,13 @@ function WeightBar({
           {label}
         </span>
         <span className={`font-semibold tabular-nums ${textClass}`}>
-          {newtons.toFixed(1)} N
+          {newtons.toFixed(1)} N · {scaleKg.toFixed(1)} kg
         </span>
       </div>
       <div
         className="h-4 overflow-hidden rounded-full bg-space-800"
         role="img"
-        aria-label={`${label}: ${newtons.toFixed(1)} newtons`}
+        aria-label={`${label}: ${newtons.toFixed(1)} newtons — a scale would read ${scaleKg.toFixed(1)} kilograms`}
       >
         <div
           className={`h-full rounded-full ${barClass} ${animate ? 'transition-all duration-500' : ''}`}
@@ -66,6 +70,8 @@ export default function MoonLabPage() {
   const [massKg, setMassKg] = useState(70);
   const moonN = useMemo(() => weightOn('moon', massKg), [massKg]);
   const earthN = useMemo(() => weightOn('earth', massKg), [massKg]);
+  const moonKg = useMemo(() => scaleReadingKg('moon', massKg), [massKg]);
+  const earthKg = useMemo(() => scaleReadingKg('earth', massKg), [massKg]);
   const maxEarthN = MAX_MASS_KG * EARTH_GRAVITY;
   const oneWay = earthMoonLightTimeSeconds();
   const roundTrip = earthMoonRoundTripSeconds();
@@ -126,6 +132,7 @@ export default function MoonLabPage() {
             label="On Earth"
             icon="🌍"
             newtons={earthN}
+            scaleKg={earthKg}
             maxNewtons={maxEarthN}
             barClass="bg-sky-400"
             textClass="text-sky-300"
@@ -135,30 +142,36 @@ export default function MoonLabPage() {
             label="On the Moon"
             icon="🌙"
             newtons={moonN}
+            scaleKg={moonKg}
             maxNewtons={maxEarthN}
             barClass="bg-amber-400"
             textClass="text-amber-300"
             animate={!reduced}
           />
         </div>
+        <p className="mt-2 text-xs text-slate-400">
+          The kg figure is what a scale would read — your mass stays{' '}
+          {massKg} kg.
+        </p>
 
         <p className="mt-4 text-sm text-slate-300">
           {massKg} kg weighs{' '}
           <span className="font-semibold tabular-nums text-amber-300">
             {moonN.toFixed(2)} N
           </span>{' '}
-          on the Moon versus{' '}
+          on the Moon (a scale would read {moonKg.toFixed(1)} kg) versus{' '}
           <span className="font-semibold tabular-nums text-sky-300">
             {earthN.toFixed(2)} N
           </span>{' '}
-          on Earth. About one sixth. You would feel light, but your mass (and
-          your inertia) would not change at all.
+          on Earth ({earthKg.toFixed(1)} kg on a scale). About one sixth. You
+          would feel light, but your mass (and your inertia) would not change
+          at all.
         </p>
 
         <svg
           viewBox="0 0 320 120"
           role="img"
-          aria-label="Stylised figure standing on the Moon's surface with Earth in the sky"
+          aria-label="Stylised figure standing on the Moon's surface with Earth in the sky — the kg figure beside the newtons is what a scale would read"
           className="mt-4 h-auto w-full"
         >
           <rect x={0} y={0} width={320} height={120} rx={8} fill="#05070d" />
@@ -171,10 +184,10 @@ export default function MoonLabPage() {
             <path d="M80 61 L80 88 M80 68 L66 78 M80 68 L94 78 M80 88 L70 104 M80 88 L90 104" />
           </g>
           <text x={110} y={72} fill="#fbbf24" fontSize={13}>
-            {moonN.toFixed(1)} N here
+            {moonN.toFixed(1)} N · {moonKg.toFixed(1)} kg here
           </text>
           <text x={110} y={90} fill="#64748b" fontSize={11}>
-            {earthN.toFixed(1)} N on Earth
+            {earthN.toFixed(1)} N · {earthKg.toFixed(1)} kg on Earth
           </text>
         </svg>
       </div>
