@@ -3,6 +3,7 @@ import FeaturedSites from '../components/home/FeaturedSites';
 import HowItWorks from '../components/home/HowItWorks';
 import MapTeaser from '../components/home/MapTeaser';
 import MissionTimeline from '../components/home/MissionTimeline';
+import TrustSection from '../components/home/TrustSection';
 import MoonRightNow from '../components/home/MoonRightNow';
 import SouthPoleSpotlight from '../components/home/SouthPoleSpotlight';
 import HeroSection from '../components/HeroSection';
@@ -21,6 +22,7 @@ export default function HomePage() {
       <HowItWorks />
       <SouthPoleSpotlight />
       <MapTeaser />
+      <TrustSection />
     </>
   );
 }
