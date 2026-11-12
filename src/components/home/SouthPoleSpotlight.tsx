@@ -29,7 +29,7 @@ export default function SouthPoleSpotlight() {
       ),
       windowHours,
     };
-  }, []);
+  }, [windowHours]);
 
   const { bestPower, bestComms } = winners;
 
