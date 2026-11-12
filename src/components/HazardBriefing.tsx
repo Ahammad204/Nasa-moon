@@ -11,12 +11,17 @@ import SourceBadge from './SourceBadge';
 // the computed illumination geometry (longest dark stretch, sunlit % over
 // the next 29.5 days), shown beside the thermal and static-charge cards.
 // Sites without verified coordinates get the explicit message instead.
+// `layout="grid"` is for full-width rows (the Navigator page): the cards
+// go 2-up on wider screens. Default "stack" is the single column used in
+// the narrower panels (mission detail, south-pole site pages).
 export default function HazardBriefing({
   site,
   siteName,
+  layout = 'stack',
 }: {
   site: Site | null;
   siteName: string;
+  layout?: 'stack' | 'grid';
 }) {
   const geometry = useMemo(() => {
     if (!site) return null;
@@ -49,7 +54,7 @@ export default function HazardBriefing({
         </p>
       )}
 
-      <div className="mt-4 space-y-3">
+      <div className={layout === 'grid' ? 'mt-4 grid gap-3 sm:grid-cols-2' : 'mt-4 space-y-3'}>
         {hazards.map((h) => (
           <article
             key={h.id}

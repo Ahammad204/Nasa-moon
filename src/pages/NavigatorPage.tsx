@@ -64,7 +64,9 @@ export default function NavigatorPage() {
   const { state, update } = useNavigatorState();
   const { reduced } = useMotionPrefs();
   const [webgl] = useState(() => hasWebGL());
-  const [tab, setTab] = useState<'scene' | 'horizon' | 'timeline'>('scene');
+  // Mobile tabs switch between the 3D scene and the horizon diagram; the
+  // timeline always shows below. On desktop every view is visible at once.
+  const [tab, setTab] = useState<'scene' | 'horizon'>('scene');
   const [view, setView] = useState<'orbit' | 'surface'>('orbit');
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(6);
@@ -150,7 +152,7 @@ export default function NavigatorPage() {
     window.setTimeout(() => setCopied(false), 2000);
   };
 
-  const tabButton = (key: 'scene' | 'horizon' | 'timeline', label: string) => (
+  const tabButton = (key: 'scene' | 'horizon', label: string) => (
     <button
       key={key}
       type="button"
@@ -180,10 +182,94 @@ export default function NavigatorPage() {
         </p>
       </header>
 
+      {/*
+        Layout: the old 3-column grid left the left column empty once the
+        short controls panel scrolled past, and the centre column ended after
+        the timeline while the hazards column kept going — big dead starfield
+        on the left and under the chart. Now the top rows pair up by height
+        (3D scene across two columns; horizon beside the Sun/Earth cards),
+        the controls stay sticky on desktop, and the timeline + hazards span
+        the full width below. DOM order is the mobile stacking order.
+      */}
       <div className="grid gap-4 lg:grid-cols-[300px_minmax(0,1fr)_340px]">
-        {/* Controls — left on desktop, sticky bar at the bottom on mobile. */}
-        <div className="order-3 lg:order-1">
-          <div className="sticky bottom-0 z-20 space-y-4 rounded-lg border border-space-800 bg-space-950/95 p-4 shadow-panel backdrop-blur-md lg:static lg:bg-space-900 lg:backdrop-blur-none">
+        {/* Mobile tabs: 3D scene vs horizon diagram. Desktop shows both. */}
+        <div
+          role="tablist"
+          aria-label="Navigator views"
+          className="flex gap-1 rounded-lg border border-space-800 bg-space-900 p-1 lg:hidden"
+        >
+          {tabButton('scene', '3D')}
+          {tabButton('horizon', 'Horizon')}
+        </div>
+
+        {/* 3D scene — wide, across the centre + right columns. */}
+        <div className={tab === 'scene' ? 'block' : 'hidden lg:block lg:col-span-2 lg:col-start-2 lg:row-start-1'}>
+          <div className="relative h-[40vh] min-h-[320px] overflow-hidden rounded-lg border border-space-800 bg-space-950 shadow-panel lg:h-[56vh]">
+            {webgl ? (
+              <Suspense fallback={<SceneSkeleton />}>
+                <NavigatorScene3D
+                  site={site}
+                  timeMs={current.getTime()}
+                  view={view}
+                  lookAzimuthDeg={lookAzimuth}
+                  reducedMotion={reduced}
+                />
+              </Suspense>
+            ) : (
+              <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
+                <p className="font-medium text-slate-200">3D scene unavailable</p>
+                <p className="text-sm text-slate-400">
+                  WebGL is not available in this browser, so the 3D scene is off. The
+                  horizon diagram and timeline below show the same Sun and Earth
+                  positions.
+                </p>
+              </div>
+            )}
+            {webgl && (
+              <div className="absolute right-2 top-2 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setView(view === 'orbit' ? 'surface' : 'orbit')}
+                  aria-pressed={view === 'surface'}
+                  className="min-h-[44px] rounded-md border border-space-700/70 bg-space-950/80 px-3 text-sm text-slate-200 backdrop-blur-md hover:bg-space-800"
+                >
+                  {view === 'orbit' ? 'Surface view' : 'Orbit view'}
+                </button>
+              </div>
+            )}
+          </div>
+          <p className="mt-2 text-xs text-slate-400">
+            {view === 'surface'
+              ? `Surface view: standing at ${site.siteName}, looking across the ground toward the horizon at the ${currentState.sun.up ? 'Sun' : 'Earth'}’s azimuth. Drag is disabled here; switch back to orbit to rotate.`
+              : 'Orbit view: drag to rotate, scroll to zoom. The pin marks the site; the terminator follows the real Sun direction.'}
+          </p>
+        </div>
+
+        {/* Horizon diagram — beside the Sun/Earth cards on desktop. */}
+        <div className={tab === 'horizon' ? 'block' : 'hidden lg:block lg:col-start-2 lg:row-start-2'}>
+          <HorizonDiagram
+            site={site}
+            date={current}
+            sun={{ azimuth: currentState.sun.azimuth, elevation: currentState.sun.elevation }}
+            earth={{ azimuth: currentState.earth.azimuth, elevation: currentState.earth.elevation }}
+          />
+        </div>
+
+        {/* Sun/Earth readouts — beside the horizon diagram on desktop. */}
+        <div className="lg:col-start-3 lg:row-start-2">
+          <SunEarthCards
+            state={currentState}
+            nextSun={nextSun}
+            nextEarth={nextEarth}
+            current={current}
+            stats={stats}
+          />
+        </div>
+
+        {/* Controls — sticky on desktop so the left column never goes empty
+            while scrolling; sticky bottom bar on mobile, as before. */}
+        <div className="lg:col-start-1 lg:row-span-2 lg:row-start-1">
+          <div className="sticky bottom-0 z-20 space-y-4 rounded-lg border border-space-800 bg-space-950/95 p-4 shadow-panel backdrop-blur-md lg:sticky lg:bottom-auto lg:top-4 lg:bg-space-900 lg:backdrop-blur-none">
             <h2 className="text-sm font-medium text-slate-300">Controls</h2>
 
             <label className="block text-sm">
@@ -301,92 +387,27 @@ export default function NavigatorPage() {
           </div>
         </div>
 
-        {/* Centre: 3D scene, horizon diagram, timeline. */}
-        <div className="order-1 space-y-4 lg:order-2">
-          <div
-            role="tablist"
-            aria-label="Navigator views"
-            className="flex gap-1 rounded-lg border border-space-800 bg-space-900 p-1 lg:hidden"
+        {/* Timeline — full width below the top rows, so the chart finally
+            gets the width it needs instead of a ~450px column. */}
+        <div className="lg:col-span-3 lg:row-start-3">
+          <Suspense
+            fallback={
+              <div className="rounded-lg border border-space-800 bg-space-900 p-4 text-sm text-slate-400" role="status">
+                Loading timeline…
+              </div>
+            }
           >
-            {tabButton('scene', '3D')}
-            {tabButton('horizon', 'Horizon')}
-            {tabButton('timeline', 'Timeline')}
-          </div>
-
-          <div className={tab === 'scene' ? 'block' : 'hidden lg:block'}>
-            <div className="relative h-[40vh] min-h-[320px] overflow-hidden rounded-lg border border-space-800 bg-space-950 shadow-panel lg:h-[56vh]">
-              {webgl ? (
-                <Suspense fallback={<SceneSkeleton />}>
-                  <NavigatorScene3D
-                    site={site}
-                    timeMs={current.getTime()}
-                    view={view}
-                    lookAzimuthDeg={lookAzimuth}
-                    reducedMotion={reduced}
-                  />
-                </Suspense>
-              ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
-                  <p className="font-medium text-slate-200">3D scene unavailable</p>
-                  <p className="text-sm text-slate-400">
-                    WebGL is not available in this browser, so the 3D scene is off. The
-                    horizon diagram and timeline below show the same Sun and Earth
-                    positions.
-                  </p>
-                </div>
-              )}
-              {webgl && (
-                <div className="absolute right-2 top-2 flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setView(view === 'orbit' ? 'surface' : 'orbit')}
-                    aria-pressed={view === 'surface'}
-                    className="min-h-[44px] rounded-md border border-space-700/70 bg-space-950/80 px-3 text-sm text-slate-200 backdrop-blur-md hover:bg-space-800"
-                  >
-                    {view === 'orbit' ? 'Surface view' : 'Orbit view'}
-                  </button>
-                </div>
-              )}
-            </div>
-            <p className="mt-2 text-xs text-slate-400">
-              {view === 'surface'
-                ? `Surface view: standing at ${site.siteName}, looking across the ground toward the horizon at the ${currentState.sun.up ? 'Sun' : 'Earth'}’s azimuth. Drag is disabled here; switch back to orbit to rotate.`
-                : 'Orbit view: drag to rotate, scroll to zoom. The pin marks the site; the terminator follows the real Sun direction.'}
-            </p>
-          </div>
-
-          <div className={tab === 'horizon' ? 'block' : 'hidden lg:block'}>
-            <HorizonDiagram
-              site={site}
-              date={current}
-              sun={{ azimuth: currentState.sun.azimuth, elevation: currentState.sun.elevation }}
-              earth={{ azimuth: currentState.earth.azimuth, elevation: currentState.earth.elevation }}
-            />
-          </div>
-
-          <div className={tab === 'timeline' ? 'block' : 'hidden lg:block'}>
-            <Suspense
-              fallback={
-                <div className="rounded-lg border border-space-800 bg-space-900 p-4 text-sm text-slate-400" role="status">
-                  Loading timeline…
-                </div>
-              }
-            >
-              <NavigatorTimeline samples={stats.samples} currentMs={current.getTime()} />
-            </Suspense>
-          </div>
+            <NavigatorTimeline samples={stats.samples} currentMs={current.getTime()} />
+          </Suspense>
         </div>
 
-        {/* Right: readouts + method. */}
-        <div className="order-2 space-y-4 lg:order-3">
-          <SunEarthCards
-            state={currentState}
-            nextSun={nextSun}
-            nextEarth={nextEarth}
-            current={current}
-            stats={stats}
-          />
-          <HazardBriefing site={site} siteName={site.siteName} />
+        {/* Hazards — full-width row in a 2-column grid on desktop. */}
+        <div className="lg:col-span-3 lg:row-start-4">
+          <HazardBriefing site={site} siteName={site.siteName} layout="grid" />
+        </div>
+
+        {/* Method + links — full width at the bottom. */}
+        <div className="space-y-4 lg:col-span-3 lg:row-start-5">
           <details className="rounded-lg border border-space-800 bg-space-900 p-4 text-sm shadow-panel">
             <summary className="flex min-h-[44px] cursor-pointer items-center font-medium text-slate-200">
               Method &amp; assumptions
