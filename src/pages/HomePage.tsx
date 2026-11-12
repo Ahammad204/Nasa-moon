@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import FeatureCards from '../components/FeatureCards';
+import MoonRightNow from '../components/home/MoonRightNow';
 import HeroSection from '../components/HeroSection';
 import StatsStrip from '../components/StatsStrip';
 
@@ -10,6 +11,7 @@ export default function HomePage() {
       <HeroSection />
       <StatsStrip />
       <FeatureCards />
+      <MoonRightNow />
       <section className="mt-8 rounded-lg border border-space-800 bg-space-900 p-5 shadow-panel">
         <h2 className="text-xl font-semibold">South Pole — power &amp; communication</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-300">
