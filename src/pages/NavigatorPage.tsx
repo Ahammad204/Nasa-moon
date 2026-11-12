@@ -202,8 +202,15 @@ export default function NavigatorPage() {
           {tabButton('horizon', 'Horizon')}
         </div>
 
-        {/* 3D scene — wide, across the centre + right columns. */}
-        <div className={tab === 'scene' ? 'block' : 'hidden lg:block lg:col-span-2 lg:col-start-2 lg:row-start-1'}>
+        {/* 3D scene — wide, across the centre + right columns.
+            The grid placement classes MUST apply on desktop whatever the
+            mobile tab is: the tab only toggles mobile visibility (block vs
+            hidden below lg). Putting the placement only in one branch of
+            the ternary left the scene in a single centre column on the
+            default tab, with the whole right column empty. */}
+        <div
+          className={`${tab === 'scene' ? 'block' : 'hidden'} lg:col-span-2 lg:col-start-2 lg:row-start-1 lg:block`}
+        >
           <div className="relative h-[40vh] min-h-[320px] overflow-hidden rounded-lg border border-space-800 bg-space-950 shadow-panel lg:h-[56vh]">
             {webgl ? (
               <Suspense fallback={<SceneSkeleton />}>
@@ -245,8 +252,12 @@ export default function NavigatorPage() {
           </p>
         </div>
 
-        {/* Horizon diagram — beside the Sun/Earth cards on desktop. */}
-        <div className={tab === 'horizon' ? 'block' : 'hidden lg:block lg:col-start-2 lg:row-start-2'}>
+        {/* Horizon diagram — beside the Sun/Earth cards on desktop.
+            Same rule as the scene above: placement is unconditional on
+            desktop; the tab only toggles mobile visibility. */}
+        <div
+          className={`${tab === 'horizon' ? 'block' : 'hidden'} lg:col-start-2 lg:row-start-2 lg:block`}
+        >
           <HorizonDiagram
             site={site}
             date={current}
