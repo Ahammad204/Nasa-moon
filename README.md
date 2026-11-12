@@ -41,6 +41,9 @@ as a static React app over verified NASA/USGS data.
 - **Why the South Pole?** at `/why-south-pole`: the six-step story of lunar water (1961–2023), what it means for landing, and the NASA water video (click-to-load)
 - **Hazard briefings**: static charging and dust, fresh impacts, thermal extremes and radiation context on mission-detail, Navigator and south-pole pages, with computed longest-dark and sunlit values per site
 - **Moon Lab** at `/moon-lab`: your weight on the Moon (slider 1–150 kg), Earth–Moon signal delay, and a Moon-at-a-glance constants table — plus a compact teaser on the landing page
+- **Moon Interior** at `/moon-interior`: tappable SVG cutaway of the Moon's crust, mantle and iron core, using NASA's current values
+- **Lunar Atlas** at `/atlas`: Copernicus, South Pole-Aitken Basin and Tycho, with USGS Gazetteer / NASA numbers and a "Fly to" map link plus an LROC QuickMap link per feature
+- **Composition Explorer** at `/composition`: highlands vs maria, regolith vs megaregolith, and Apollo sample cards linking out to Washington University
 - **Shareable URLs**: search, filters, compare set and map selection all live in the query string
 
 ## Setup
@@ -69,10 +72,11 @@ Static site: all data bundled as `src/data/missions.json` and `src/data/sites.js
 
 **Science Context data layer** (three layers, strictly separated): data in
 `src/data/sources.json`, `src/data/moon-constants.json`,
-`src/data/water-timeline.json`, `src/data/hazards.json` and
-`src/data/conclusions.json` (every record carries `sources` and
-`lastVerified`; unknown = `null`); pure engine functions in `src/lib/physics/`
-(weight, light time) and `src/lib/astro/`; React components only render data
+`src/data/water-timeline.json`, `src/data/hazards.json`,
+`src/data/moon-interior.json`, `src/data/atlas.json`,
+`src/data/composition.json` and `src/data/conclusions.json` (every record
+carries `sources` and `lastVerified`; unknown = `null`); pure engine
+functions in `src/lib/physics/` (weight, light time) and `src/lib/astro/`; React components only render data
 + engine output. No number reaches the UI except through the data layer or
 engine, with its source attached. Research sources are listed in
 `src/data/sources.json` (NASA Science pages, NASA SVS, USGS Gazetteer,

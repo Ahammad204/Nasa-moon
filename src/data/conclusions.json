@@ -284,5 +284,75 @@
    "label": "Moon Lab",
    "path": "/moon-lab"
   }
+ },
+ {
+  "id": "interior-crust",
+  "sourceIds": [
+   "nasa-moon-facts",
+   "nasa-composition"
+  ],
+  "text": "The Moon's crust is about 40 km thick on the near side and about 60 km thick on the far side.",
+  "usedIn": {
+   "label": "Moon Interior",
+   "path": "/moon-interior"
+  }
+ },
+ {
+  "id": "interior-core",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "The Moon has a solid iron inner core about 240 km in radius, wrapped in about 90 km of liquid iron.",
+  "usedIn": {
+   "label": "Moon Interior",
+   "path": "/moon-interior"
+  }
+ },
+ {
+  "id": "atlas-spa",
+  "sourceIds": [
+   "nasa-spa-basin",
+   "nasa-craters"
+  ],
+  "text": "The South Pole-Aitken Basin is the Moon's largest and deepest impact basin, more than 2,500 km across and about 10 km deep on average.",
+  "usedIn": {
+   "label": "Lunar Atlas",
+   "path": "/atlas"
+  }
+ },
+ {
+  "id": "atlas-copernicus",
+  "sourceIds": [
+   "usgs-gazetteer"
+  ],
+  "text": "Copernicus is a young 93 km crater whose central peaks expose material from deep below the surface.",
+  "usedIn": {
+   "label": "Lunar Atlas",
+   "path": "/atlas"
+  }
+ },
+ {
+  "id": "composition-highlands",
+  "sourceIds": [
+   "open-univ-virtual-microscope",
+   "nasa-composition"
+  ],
+  "text": "The lunar highlands are calcium- and aluminium-rich anorthosite crust about 4.15–4.4 billion years old.",
+  "usedIn": {
+   "label": "Composition Explorer",
+   "path": "/composition"
+  }
+ },
+ {
+  "id": "composition-maria",
+  "sourceIds": [
+   "open-univ-virtual-microscope",
+   "nasa-composition"
+  ],
+  "text": "The dark maria are iron- and titanium-rich basalt plains about 3.0–3.5 billion years old.",
+  "usedIn": {
+   "label": "Composition Explorer",
+   "path": "/composition"
+  }
  }
 ]

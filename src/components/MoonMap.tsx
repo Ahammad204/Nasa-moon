@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, type ReactNode } from 'react';
-import { ImageOverlay, MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { CircleMarker, ImageOverlay, MapContainer, Popup, TileLayer, useMap } from 'react-leaflet';
 
 const TREK_URL =
   'https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd_v02/1.0.0/default/default028mm/{z}/{y}/{x}.jpg';
@@ -18,6 +18,19 @@ const FALLBACK_BOUNDS: [[number, number], [number, number]] = [
 interface Props {
   useFallback?: boolean;
   children?: ReactNode;
+  /** Centre the flat map on a lat/lon (e.g. an Atlas "Fly to" link). */
+  focus?: { lat: number; lon: number; label: string };
+}
+
+// Centres the map on the focus point once, at a zoom where a crater is
+// readable. Runs after mount; FitToContainer skips its full-Moon fit while
+// a focus is set, so the two do not fight.
+function FocusOn({ focus }: { focus: { lat: number; lon: number } }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView([focus.lat, focus.lon], 3, { animate: false });
+  }, [map, focus]);
+  return null;
 }
 
 // Edge-to-edge fill. Two bugs left gutters around the Moon: Leaflet's
@@ -29,12 +42,22 @@ interface Props {
 // mount / after layout / on every resize, and pin minZoom to that zoom so
 // zooming out can never re-open a gap. `floor` is the CRS floor: tiles can't
 // go below z0 (a smaller frame then crops, which still fills).
-function FitToContainer({ bounds, floor }: { bounds: L.LatLngBoundsExpression; floor: number }) {
+function FitToContainer({
+  bounds,
+  floor,
+  lockView = false,
+}: {
+  bounds: L.LatLngBoundsExpression;
+  floor: number;
+  /** When set, only invalidate the size — never move the camera. */
+  lockView?: boolean;
+}) {
   const map = useMap();
   useEffect(() => {
     const b = L.latLngBounds(bounds as L.LatLngBoundsLiteral);
     const fit = () => {
       map.invalidateSize();
+      if (lockView) return;
       const size = map.getSize();
       const nw = map.project(b.getNorthWest(), 0);
       const se = map.project(b.getSouthEast(), 0); // east corner: NW/SW share a longitude
@@ -63,7 +86,7 @@ function FitToContainer({ bounds, floor }: { bounds: L.LatLngBoundsExpression; f
 
 // Hides the Moon tile source, CRS and fallback (D-012): Trek WMTS tiles on
 // L.CRS.EPSG4326 (zoom 0-8), static WAC overlay on L.CRS.Simple when tiles fail.
-export default function MoonMap({ useFallback = false, children }: Props) {
+export default function MoonMap({ useFallback = false, children, focus }: Props) {
   return (
     <div className="h-full w-full" role="application" aria-label="Moon map">
       {useFallback ? (
@@ -93,7 +116,19 @@ export default function MoonMap({ useFallback = false, children }: Props) {
           className="h-full w-full"
         >
           <TileLayer url={TREK_URL} attribution={ATTRIBUTION} noWrap minZoom={0} maxZoom={8} />
-          <FitToContainer bounds={[[-90, -180], [90, 180]]} floor={0} />
+          <FitToContainer bounds={[[-90, -180], [90, 180]]} floor={0} lockView={!!focus} />
+          {focus && (
+            <>
+              <FocusOn focus={focus} />
+              <CircleMarker
+                center={[focus.lat, focus.lon]}
+                radius={10}
+                pathOptions={{ color: '#fbbf24', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.5 }}
+              >
+                <Popup>{focus.label}</Popup>
+              </CircleMarker>
+            </>
+          )}
           {children}
         </MapContainer>
       )}

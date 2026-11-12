@@ -5,6 +5,7 @@ import type { Site } from '../lib/astro';
 import { hasMapPosition, missions } from '../lib/missions';
 import { hasSiteCoordinates, southPoleSites } from '../lib/sites';
 import HazardBriefing from '../components/HazardBriefing';
+import QuickMapButton from '../components/QuickMapButton';
 import type { SouthPoleSite } from '../lib/types';
 import {
   fromDatetimeLocalValue,
@@ -538,6 +539,15 @@ export default function SouthPolePage() {
               >
                 Open in Navigator →
               </Link>
+              {site.latitude != null && site.longitude != null && (
+                <div className="mt-2">
+                  <QuickMapButton
+                    latitude={site.latitude}
+                    longitude={site.longitude}
+                    label={site.name}
+                  />
+                </div>
+              )}
             </article>
           );
         })}

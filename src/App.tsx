@@ -22,6 +22,10 @@ const LibraryPage = lazy(() => import('./pages/LibraryPage'));
 const MoonLabPage = lazy(() => import('./pages/MoonLabPage'));
 // Lazy: the "Why the South Pole?" story page (timeline + video poster).
 const WhySouthPolePage = lazy(() => import('./pages/WhySouthPolePage'));
+// Lazy: Phase 5 story pages (interior cutaway, atlas, composition).
+const MoonInteriorPage = lazy(() => import('./pages/MoonInteriorPage'));
+const AtlasPage = lazy(() => import('./pages/AtlasPage'));
+const CompositionPage = lazy(() => import('./pages/CompositionPage'));
 
 export default function App() {
   return (
@@ -37,6 +41,9 @@ export default function App() {
             <Route path="/south-pole" element={<SouthPolePage />} />
             <Route path="/why-south-pole" element={<WhySouthPolePage />} />
             <Route path="/moon-lab" element={<MoonLabPage />} />
+            <Route path="/moon-interior" element={<MoonInteriorPage />} />
+            <Route path="/atlas" element={<AtlasPage />} />
+            <Route path="/composition" element={<CompositionPage />} />
             <Route path="/library" element={<LibraryPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/payloads" element={<PayloadsPage />} />

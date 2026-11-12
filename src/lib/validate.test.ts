@@ -5,6 +5,10 @@ import { conclusions } from './conclusions';
 import waterTimelineData from '../data/water-timeline.json';
 import { hazards } from './hazards';
 import { moonConstants } from './moonConstants';
+import { atlasFeatures } from './atlas';
+import { composition } from './composition';
+import { interiorLayers } from './moonInterior';
+import { quickMapUrl } from './quickmap';
 import { getSourceById, researchSources } from './sources';
 import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
@@ -183,9 +187,12 @@ describe('south-pole sites validation (Phase 4 data-honesty rules)', () => {
 });
 
 describe('research sources + library conclusions (Science Context)', () => {
-  it('sources.json: 10 approved sources, unique ids, https urls, no forbidden hosts', () => {
+  it('sources.json: 11 approved sources, unique ids, https urls, no forbidden hosts', () => {
+    // 11, not 10: Phase 5 added the NASA South Pole-Aitken Basin page so the
+    // Atlas can cite the basin's diameter and depth from a NASA page instead
+    // of attributing them to the craters overview page.
     const ids = researchSources.map((s) => s.id);
-    expect(researchSources.length).toBe(10);
+    expect(researchSources.length).toBe(11);
     expect(new Set(ids).size).toBe(ids.length);
     researchSources.forEach((s) => {
       expect(s.url.startsWith('https://')).toBe(true);
@@ -261,6 +268,72 @@ describe('moon constants (Science Context)', () => {
       expect(c.lastVerified).toBe('2026-11-12');
       expect(c.display.length).toBeGreaterThan(0);
       c.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+    });
+  });
+});
+
+describe('moon interior + atlas + composition (Science Context, Phase 5)', () => {
+  it('interior: 4 NASA-numbered layers, every source id resolves', () => {
+    expect(interiorLayers.map((l) => l.id)).toEqual([
+      'crust',
+      'mantle',
+      'outer-core',
+      'inner-core',
+    ]);
+    const crust = interiorLayers[0];
+    expect(crust.thicknessKmNear).toBe(40);
+    expect(crust.thicknessKmFar).toBe(60);
+    expect(interiorLayers[3].radiusKm).toBe(240);
+    expect(interiorLayers[2].thicknessKm).toBe(90);
+    interiorLayers.forEach((l) => {
+      expect(l.summary.length).toBeGreaterThan(20);
+      expect(l.lastVerified).toBe('2026-11-12');
+      l.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+    });
+  });
+
+  it('atlas: 3 features, numbers only where verified, nulls stay null', () => {
+    expect(atlasFeatures.map((f) => f.id)).toEqual([
+      'copernicus',
+      'south-pole-aitken',
+      'tycho',
+    ]);
+    const copernicus = atlasFeatures[0];
+    expect(copernicus.diameterKm).toBe(93);
+    expect(copernicus.depthKm).toBeNull();
+    expect(copernicus.age).toBeNull();
+    const spa = atlasFeatures[1];
+    expect(spa.diameterKm).toBe(2500);
+    expect(spa.depthKm).toBe(10);
+    expect(spa.age).toBe('about 4 billion years');
+    const tycho = atlasFeatures[2];
+    expect(tycho.diameterKm).toBe(85);
+    expect(tycho.depthKm).toBeNull();
+    atlasFeatures.forEach((f) => {
+      expect(f.latitude).toBeGreaterThanOrEqual(-90);
+      expect(f.latitude).toBeLessThanOrEqual(90);
+      expect(f.longitude).toBeGreaterThanOrEqual(-180);
+      expect(f.longitude).toBeLessThanOrEqual(180);
+      expect(f.narrative.length).toBeGreaterThan(20);
+      expect(f.lastVerified).toBe('2026-11-12');
+      f.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+      // Every feature must have a working QuickMap link (verified format).
+      expect(quickMapUrl(f.latitude, f.longitude)).toMatch(
+        /^https:\/\/quickmap\.lroc\.asu\.edu\/\?extent=[-0-9.,]+&proj=10$/,
+      );
+    });
+  });
+
+  it('composition: highlands vs maria ages, surface layers, 2 sample cards', () => {
+    expect(composition.terrains.map((t) => t.id)).toEqual(['highlands', 'maria']);
+    expect(composition.terrains[0].ageGa).toBe('4.15–4.4');
+    expect(composition.terrains[1].ageGa).toBe('3.0–3.5');
+    expect(composition.surface.map((s) => s.id)).toEqual(['regolith', 'megaregolith']);
+    expect(composition.samples.map((s) => s.id)).toEqual(['60025', '77215']);
+    [...composition.terrains, ...composition.surface].forEach((item) => {
+      expect(item.summary.length).toBeGreaterThan(20);
+      expect(item.lastVerified).toBe('2026-11-12');
+      item.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
     });
   });
 });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import MapMarkers from '../components/MapMarkers';
 import MoonMap from '../components/MoonMap';
@@ -50,9 +50,20 @@ export default function MapPage() {
   const [leafletSel, setLeafletSel] = useState<string | null>(params.get('mission'));
   const can3D = hasWebGL() && !reduced;
 
+  // Atlas "Fly to" deep link: /map?lat=..&lon=..&name=.. — centres the flat
+  // map on the feature. Invalid values are ignored (plain whole-Moon view).
+  const focus = useMemo(() => {
+    const lat = Number(params.get('lat'));
+    const lon = Number(params.get('lon'));
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+    return { lat, lon, label: params.get('name') ?? 'Feature' };
+  }, [params]);
+
   useEffect(() => {
-    setMapMode(can3D ? 'globe' : 'flat');
-  }, [can3D]);
+    // A fly-to link wants the flat map, where the focus point is centred.
+    setMapMode(focus ? 'flat' : can3D ? 'globe' : 'flat');
+  }, [can3D, focus]);
 
   // Slow-device fallback: the FPS guard drops scene quality to 0 after 3 s
   // under 24 fps, which unmounts the shared 3D canvas — leaving the globe
@@ -172,6 +183,16 @@ export default function MapPage() {
         )}
       </div>
 
+      {focus && (
+        <p className="pointer-events-auto mb-4 rounded-lg border border-accent/50 bg-accent-dim/30 px-3 py-2 text-sm">
+          Showing <span className="font-semibold">{focus.label}</span> — {focus.lat}°,{' '}
+          {focus.lon}° ·{' '}
+          <Link to="/map" className="text-accent underline">
+            Show the whole Moon
+          </Link>
+        </p>
+      )}
+
       {isGlobe ? (
         // Globe stage: the center stays empty on purpose — the interactive moon
         // lives in the shared canvas behind it, with UI docked at the edges.
@@ -202,7 +223,7 @@ export default function MapPage() {
       ) : (
         <>
           <div className="pointer-events-auto aspect-[2/1] overflow-hidden rounded-lg border border-space-800 shadow-panel ring-1 ring-space-700/50 transition-shadow duration-300 hover:shadow-glow hover:ring-accent/40">
-            <MoonMap>
+            <MoonMap focus={focus ?? undefined}>
               <MapMarkers missions={placed} selectedId={leafletSel} onSelect={setLeafletSel} />
             </MoonMap>
           </div>
