@@ -13,6 +13,7 @@ import {
   selectFromScene,
   setMapMode,
   useSceneFlags,
+  useSceneQuality,
 } from '../three/sceneStore';
 
 function rowClass(id: string, selectedId: string | null): string {
@@ -45,12 +46,21 @@ export default function MapPage() {
   const [params] = useSearchParams();
   const { reduced } = useMotionPrefs();
   const { mapMode, selectedId } = useSceneFlags();
+  const quality = useSceneQuality();
   const [leafletSel, setLeafletSel] = useState<string | null>(params.get('mission'));
   const can3D = hasWebGL() && !reduced;
 
   useEffect(() => {
     setMapMode(can3D ? 'globe' : 'flat');
   }, [can3D]);
+
+  // Slow-device fallback: the FPS guard drops scene quality to 0 after 3 s
+  // under 24 fps, which unmounts the shared 3D canvas — leaving the globe
+  // stage empty with dead buttons. Switch to the Leaflet flat map instead
+  // (the user can still tap "3D Globe" to try again once the device recovers).
+  useEffect(() => {
+    if (quality === 0 && mapMode === 'globe') setMapMode('flat');
+  }, [quality, mapMode]);
 
   useEffect(() => {
     const p = params.get('mission');
@@ -142,10 +152,18 @@ export default function MapPage() {
                 key={m}
                 type="button"
                 aria-pressed={mapMode === m}
+                disabled={m === 'globe' && quality === 0}
+                title={
+                  m === 'globe' && quality === 0
+                    ? '3D unavailable on this device — showing the 2D map'
+                    : undefined
+                }
                 onClick={() => setMapMode(m)}
                 className={`min-h-[44px] px-4 ${
-                  mapMode === m ? 'bg-accent-dim text-white' : 'text-slate-300 hover:bg-space-900'
-                }`}
+                  mapMode === m
+                    ? 'bg-accent-dim text-white'
+                    : 'text-slate-300 hover:bg-space-900'
+                } ${m === 'globe' && quality === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
               >
                 {m === 'globe' ? '3D Globe' : 'Flat Map'}
               </button>
