@@ -87,7 +87,7 @@ export default function MissionTimeline() {
           aria-hidden="true"
           className="absolute left-0 right-0 top-[7px] h-0.5 bg-gradient-to-r from-accent via-accent-dim to-space-700"
         />
-        <div className="relative flex gap-3 overflow-x-auto pb-2 pt-0 [scrollbar-width:thin]">
+        <div className="relative flex gap-3 overflow-x-auto pb-2 pt-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {dated.map((m) => (
             <Node key={m.id} mission={m} />
           ))}
@@ -106,6 +106,12 @@ export default function MissionTimeline() {
             <Node key={m.id} mission={m} />
           ))}
         </div>
+        {/* Fade at the right edge hints there is more to scroll, now that
+            the native scrollbar is hidden. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-0 right-0 top-0 w-16 bg-gradient-to-l from-space-950 to-transparent"
+        />
       </div>
       <p className="mt-1 text-xs text-slate-400">
         Swipe or scroll sideways. Dates from NASA CLPS Deliveries; undated
