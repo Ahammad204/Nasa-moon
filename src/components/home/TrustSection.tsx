@@ -44,7 +44,7 @@ export default function TrustSection() {
         <p className="mt-2 max-w-3xl text-slate-300">
           Every number on this site traces back to a named source. When a
           coordinate or a date cannot be verified, it is stored as missing and
-          shown as missing — never filled in with a guess.
+          shown as missing. Never filled in with a guess.
         </p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">

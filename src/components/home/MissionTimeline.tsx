@@ -68,7 +68,7 @@ export default function MissionTimeline() {
             From first launch to what&apos;s next
           </h2>
           <p className="mt-1 max-w-2xl text-slate-300">
-            Every CLPS delivery in launch order. Scroll sideways — the two
+            Every CLPS delivery in launch order. Scroll sideways. The two
             missions that have flown are dated; the rest are queued with dates
             still to be announced.
           </p>

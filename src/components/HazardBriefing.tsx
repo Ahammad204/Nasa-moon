@@ -36,7 +36,7 @@ export default function HazardBriefing({
       className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel"
     >
       <h2 id="hazard-heading" className="text-lg font-semibold">
-        ⚠️ Hazards at {siteName} — context
+        ⚠️ Hazards at {siteName} (context)
       </h2>
       <p className="mt-1 text-sm text-slate-400">
         What the environment is like here. These are general conditions, not a

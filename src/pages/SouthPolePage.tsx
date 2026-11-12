@@ -184,13 +184,13 @@ export default function SouthPolePage() {
           🌙 Artemis III · Lunar south pole
         </p>
         <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
-          Where should the next astronauts land?
+          Landing sites for the next astronauts
         </h1>
         <p className="mt-2 max-w-2xl text-base text-slate-300">
-          Shadowed craters near the pole may hold water ice, while nearby ridges
-          stay in near-constant sunlight. Compare the candidate regions for the
-          two things a lander needs most — <span className="text-amber-300">power</span>{' '}
-          and <span className="text-sky-300">communication</span> — over one lunar day.
+          Shadowed craters near the pole may hold water ice. Nearby ridges
+          stay in near-constant sunlight. Compare the candidate regions on
+          the two things a lander needs most, <span className="text-amber-300">power</span>{' '}
+          and <span className="text-sky-300">communication</span>, over one lunar day.
         </p>
         <div className="mt-4 flex flex-wrap gap-2 text-sm">
           <span className="rounded-full border border-space-700 bg-space-950 px-3 py-1.5 text-slate-200">
@@ -227,7 +227,7 @@ export default function SouthPolePage() {
           </div>
           <h2 className="mt-1 font-semibold text-slate-100">Water ice</h2>
           <p className="mt-1 text-sm text-slate-300">
-            Permanently shadowed craters never see the Sun — ice may survive there.
+            Permanently shadowed craters never see the Sun, so ice may survive there.
           </p>
         </div>
         <div className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">
@@ -236,8 +236,8 @@ export default function SouthPolePage() {
           </div>
           <h2 className="mt-1 font-semibold text-slate-100">Near-constant sunlight</h2>
           <p className="mt-1 text-sm text-slate-300">
-            Ridges near the pole catch the low Sun almost all lunar day — power
-            for a lander.
+            Ridges near the pole catch the low Sun almost all lunar day, which
+            powers a lander.
           </p>
         </div>
         <div className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">
@@ -246,7 +246,7 @@ export default function SouthPolePage() {
           </div>
           <h2 className="mt-1 font-semibold text-slate-100">Earth in view</h2>
           <p className="mt-1 text-sm text-slate-300">
-            From the near side, Earth hangs almost still in the sky — a direct
+            From the near side, Earth hangs almost still in the sky, a direct
             line home.
           </p>
         </div>
@@ -444,19 +444,19 @@ export default function SouthPolePage() {
             <h2 className="font-semibold">How to read this page</h2>
             <ul className="mt-2 space-y-2 text-sm text-slate-300">
               <li>
-                <span className="text-amber-300">☀️ Sunlight</span> — hours the Sun
+                <span className="text-amber-300">☀️ Sunlight</span>: hours the Sun
                 is up. More sun = more solar power.
               </li>
               <li>
-                <span className="text-sky-300">📡 Earth visible</span> — hours
+                <span className="text-sky-300">📡 Earth visible</span>: hours
                 Earth is above the horizon. More = longer direct contact home.
               </li>
               <li>
-                <span className="text-emerald-300">✅ Both</span> — hours with Sun
+                <span className="text-emerald-300">✅ Both</span>: hours with Sun
                 AND Earth up: powered and talking at once.
               </li>
               <li>
-                <span className="text-slate-100">🌑 Longest dark</span> — the
+                <span className="text-slate-100">🌑 Longest dark</span>: the
                 longest stretch without Sun. Batteries must survive this.
               </li>
             </ul>
@@ -468,7 +468,7 @@ export default function SouthPolePage() {
       </div>
 
       {/* One card per computable site. */}
-      <h2 className="mb-3 mt-6 text-xl font-bold">🏆 Rankings — one lunar day</h2>
+      <h2 className="mb-3 mt-6 text-xl font-bold">🏆 Rankings over one lunar day</h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {stats.rows.map(({ site, stats: st }, i) => {
           const bestPower = st.sunlitHours === stats.bestSun && stats.bestSun > 0;
@@ -561,7 +561,7 @@ export default function SouthPolePage() {
           </h2>
           <p className="mt-1 text-sm text-slate-300">
             NASA named these regions but published no numeric coordinates for
-            them, so they cannot be plotted or ranked yet — no numbers are
+            them, so they cannot be plotted or ranked yet. No numbers are
             guessed here. When NASA publishes coordinates, they will appear
             above automatically.
           </p>
@@ -621,10 +621,11 @@ export default function SouthPolePage() {
         <p className="mt-3 text-sm">
           <Link to="/navigator" className="text-accent underline">
             Open the Sun &amp; Earth Navigator
-          </Link>
-          {' — pick any site above and watch the Sun and Earth move over a lunar day.'}{' '}
+          </Link>{' '}
+          to pick any site above and watch the Sun and Earth move over a lunar
+          day.{' '}
           <Link to="/why-south-pole" className="text-accent underline">
-            Why the south pole? Read the story →
+            The south pole story →
           </Link>
         </p>
       </details>

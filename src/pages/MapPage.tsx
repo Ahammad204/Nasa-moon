@@ -130,7 +130,7 @@ export default function MapPage() {
 
       <h2 className="mb-2 text-lg font-semibold">No landing site data ({unplaced.length})</h2>
       <p className="mb-3 text-sm text-slate-400">
-        These missions are not placed on the map — their sources give no coordinates.
+        These missions are not placed on the map. Their sources give no coordinates.
       </p>
       <ul className="pointer-events-auto space-y-2">
         {unplaced.map((m) => (
@@ -166,7 +166,7 @@ export default function MapPage() {
                 disabled={m === 'globe' && quality === 0}
                 title={
                   m === 'globe' && quality === 0
-                    ? '3D unavailable on this device — showing the 2D map'
+                    ? '3D unavailable on this device. Showing the 2D map'
                     : undefined
                 }
                 onClick={() => setMapMode(m)}
@@ -240,7 +240,7 @@ export default function MapPage() {
         <div className="pointer-events-auto relative z-10 -mx-4 -mb-6 border-t border-space-800 bg-space-950 px-4 pb-6 pt-4">
           <p className="mb-4 text-xs text-slate-400">
             Globe: stylized; markers are approximate feature centers (USGS Gazetteer). Basemap
-            imagery credits: NASA/LRO/LROC WAC mosaic — see the footer (D-014).
+            imagery credits: NASA/LRO/LROC WAC mosaic. See the footer (D-014).
           </p>
           {belowLists}
         </div>

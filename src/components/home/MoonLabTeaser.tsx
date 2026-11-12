@@ -18,7 +18,7 @@ export default function MoonLabTeaser() {
         🧪 Moon Lab — try it
       </p>
       <h2 id="moon-lab-teaser-heading" className="mt-1 text-2xl font-bold">
-        How much would you weigh on the Moon?
+        Your weight on the Moon
       </h2>
       <div className="mt-4 flex flex-wrap items-end gap-3">
         <label className="text-sm">
@@ -45,7 +45,7 @@ export default function MoonLabTeaser() {
         </p>
       </div>
       <p className="mt-3 text-sm text-slate-300">
-        About one sixth of Earth weight — and a radio signal still takes about
+        About one sixth of Earth weight. A radio signal still takes about
         1.28 s to reach home.
       </p>
       <Link

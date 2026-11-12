@@ -42,12 +42,12 @@ export default function SouthPoleSpotlight() {
         🌙 Artemis III · Lunar south pole
       </p>
       <h2 id="spotlight-heading" className="mt-1 text-2xl font-bold sm:text-3xl">
-        South Pole — power &amp; communication
+        South Pole: power &amp; communication
       </h2>
       <p className="mt-2 max-w-3xl text-slate-300">
         Artemis III is headed for the lunar south pole, where sunlit ridges sit
         next to permanently shadowed craters. Over one lunar day, here is who
-        wins on sunlight — and who wins on staying in touch with Earth.
+        wins on sunlight. And who wins on staying in touch with Earth.
       </p>
 
       {bestPower && bestComms ? (
@@ -112,7 +112,7 @@ export default function SouthPoleSpotlight() {
           to="/why-south-pole"
           className="inline-flex min-h-[44px] items-center rounded-md border border-space-700 px-5 text-sm text-slate-200 hover:bg-space-900"
         >
-          Why the south pole? →
+          Read the south pole story →
         </Link>
       </div>
       <p className="mt-3 text-xs text-slate-400">

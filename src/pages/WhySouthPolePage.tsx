@@ -80,7 +80,7 @@ function WaterVideo() {
             </span>
           </span>
           <span className="absolute bottom-2 left-2 rounded bg-space-950/80 px-2 py-1 text-xs text-slate-200">
-            NASA video — click to load (no video loads until you press play)
+            NASA video: click to load (no video loads until you press play)
           </span>
         </button>
       )}
@@ -97,14 +97,14 @@ export default function WhySouthPolePage() {
     <section className="mx-auto max-w-3xl">
       <header className="mb-6">
         <p className="text-xs font-semibold uppercase tracking-widest text-accent">
-          🌙 Why the south pole?
+          🌙 The south pole
         </p>
         <h1 className="mt-2 text-3xl font-bold leading-tight sm:text-4xl">
           Sixty years of hunting for lunar water
         </h1>
         <p className="mt-2 text-base text-slate-300">
           For decades the Moon was thought to be bone dry. Then, step by step,
-          telescopes and spacecraft found water — first as a prediction, then as
+          telescopes and spacecraft found water: first as a prediction, then as
           hydrogen, then as ice in craters that never see the Sun. This is that
           story, and why the next astronauts are headed for the south pole.
         </p>
@@ -123,7 +123,7 @@ export default function WhySouthPolePage() {
         Summaries are in our own words. Sources verified 2026-11-12.
       </p>
 
-      <h2 className="mb-4 mt-10 text-xl font-bold">What this means for landing</h2>
+      <h2 className="mb-4 mt-10 text-xl font-bold">Landing at the pole</h2>
       <div className="grid gap-3 sm:grid-cols-3">
         <div className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">
           <div className="text-2xl" aria-hidden="true">
@@ -131,7 +131,7 @@ export default function WhySouthPolePage() {
           </div>
           <h3 className="mt-1 font-semibold text-slate-100">Ice where it is dark</h3>
           <p className="mt-1 text-sm text-slate-300">
-            The highest water-ice concentrations sit in dark polar craters — that
+            The highest water-ice concentrations sit in dark polar craters. That
             is why the south pole is the target.
           </p>
           <div className="mt-2">

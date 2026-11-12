@@ -6,7 +6,7 @@ const FEATURES = [
   {
     to: '/missions',
     title: 'Missions',
-    body: 'Search and filter every CLPS delivery — landers, dates, and status at a glance.',
+    body: 'Search and filter every CLPS delivery: landers, dates, and status at a glance.',
   },
   {
     to: '/map',
@@ -16,7 +16,7 @@ const FEATURES = [
   {
     to: '/compare',
     title: 'Compare',
-    body: 'Put 2-3 missions side by side and spot the differences instantly.',
+    body: 'Put 2-3 missions side by side and spot the differences.',
   },
   {
     to: '/payloads',

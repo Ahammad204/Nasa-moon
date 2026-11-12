@@ -16,7 +16,7 @@ const STEPS = [
     n: '2',
     icon: '📅',
     title: 'Pick a date',
-    body: 'Set any date and time in UTC, then scrub across a full lunar day — 29.5 days of Sun and Earth.',
+    body: 'Set any date and time in UTC, then scrub across a full lunar day: 29.5 days of Sun and Earth.',
     to: '/navigator',
     cta: 'Open the Navigator →',
   },
@@ -34,7 +34,7 @@ export default function HowItWorks() {
   return (
     <section aria-labelledby="how-heading" className="mt-8">
       <p className="text-xs font-semibold uppercase tracking-widest text-sky-300">
-        🧭 New here? Start in 10 seconds
+        🧭 Start here
       </p>
       <h2 id="how-heading" className="mt-1 text-2xl font-bold sm:text-3xl">
         How it works

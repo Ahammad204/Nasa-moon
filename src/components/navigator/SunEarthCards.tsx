@@ -136,7 +136,7 @@ export default function SunEarthCards({
 
       {bothUp && (
         <p className="rounded-lg border border-signal-ok/50 bg-signal-ok/10 px-3 py-2 text-sm font-medium text-signal-ok">
-          ✓ Powered + communicating — Sun and Earth are both up.
+          ✓ Powered + communicating: Sun and Earth are both up.
         </p>
       )}
 
@@ -144,7 +144,7 @@ export default function SunEarthCards({
         At <span className="tabular-nums text-slate-300">{fmtUtc(current)}</span>
         {state.sun.up && state.earth.up
           ? ''
-          : ' — the lander is in shadow or out of contact right now.'}
+          : '. The lander is in shadow or out of contact right now.'}
       </p>
 
       {stats && (

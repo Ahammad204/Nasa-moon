@@ -90,8 +90,8 @@ export default function SiteConditionsSection({
         Site conditions
       </h2>
       <p className="mb-3 text-sm text-slate-300">
-        Sunlight and Earth visibility for each site over the same window — what
-        decides power and communication. Best power:{' '}
+        Sunlight and Earth visibility for each site over the same window: the
+        numbers that decide power and communication. Best power:{' '}
         <span className="text-slate-100">{bestPower ? bestPower.mission.name : '—'}</span>
         {' · '}Best comms:{' '}
         <span className="text-slate-100">{bestComms ? bestComms.mission.name : '—'}</span>
@@ -229,7 +229,7 @@ export default function SiteConditionsSection({
             Earth-visible %.
           </p>
           <p>
-            Limits: geometric ideal horizon — terrain obstruction is NOT included, so
+            Limits: geometric ideal horizon, terrain obstruction is NOT included, so
             a real lander behind a ridge sees less sky than this. Positions are
             good to about ±0.3°. Nothing here is survey-grade.
           </p>

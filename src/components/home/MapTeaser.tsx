@@ -29,7 +29,7 @@ export default function MapTeaser() {
             <p className="mt-2 text-slate-300">
               Every CLPS landing site with known coordinates, pinned on a real
               NASA LRO mosaic. Drag to spin the Moon, click a marker for the
-              mission — and jump straight into the Sun &amp; Earth Navigator
+              mission. Jump straight into the Sun &amp; Earth Navigator
               from any site.
               {unplaced > 0 &&
                 ` ${unplaced} of ${missions.length} missions have no coordinates yet, so they are listed below the map instead of placed on it.`}

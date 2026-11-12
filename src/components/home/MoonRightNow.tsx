@@ -108,7 +108,7 @@ export default function MoonRightNow() {
       </div>
 
       <p className="mt-4 text-xs text-slate-400">
-        Computed live in your browser — no image, no hard-coded date. A full
+        Computed live in your browser. No image, no hard-coded date. A full
         lunar cycle takes about 29.5 days, which is why the Navigator window
         defaults to one lunar day.
       </p>

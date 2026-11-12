@@ -7,19 +7,19 @@ import { Link } from 'react-router-dom';
 const QA = [
   {
     q: 'What is CLPS?',
-    a: 'Commercial Lunar Payload Services — NASA’s programme where American companies deliver NASA science and technology payloads to the lunar surface. This site tracks all 15 CLPS deliveries in the NASA dataset, from the first launches in 2024 to the ones still queued.',
+    a: 'Commercial Lunar Payload Services, NASA’s programme where American companies deliver NASA science and technology payloads to the lunar surface. This site tracks all 15 CLPS deliveries in the NASA dataset, from the first launches in 2024 to the ones still queued.',
   },
   {
     q: 'Why does sunlight matter for a lander?',
-    a: 'A lander runs on solar power, so sunlight is its fuel. The “longest dark” number on this site is the longest stretch without Sun — the lander’s batteries must survive that. At the south pole, sunlit ridges sit right next to craters that never see the Sun at all, so the landing spot decides how much power a mission gets.',
+    a: 'A lander runs on solar power, so sunlight is its fuel. The “longest dark” number on this site is the longest stretch without Sun. The lander’s batteries must survive that. At the south pole, sunlit ridges sit right next to craters that never see the Sun at all, so the landing spot decides how much power a mission gets.',
   },
   {
     q: 'Can I trust these numbers?',
-    a: 'They are computed, not guessed: Sun and Moon positions come from the astronomy-engine library (sub-arcminute accuracy), and the Sun/Earth geometry follows Meeus, “Astronomical Algorithms”, chapter 53 — validated against the book’s worked example and the Apollo 11 landing. The limits are stated everywhere: a geometric ideal horizon (terrain is not included) and positions good to about ±0.3°. Coordinates are approximate feature centres.',
+    a: 'They are computed from Sun and Moon positions in the astronomy-engine library (sub-arcminute accuracy). The Sun/Earth geometry follows Meeus, “Astronomical Algorithms”, chapter 53, validated against the book’s worked example and the Apollo 11 landing. The limits are stated everywhere: a geometric ideal horizon (terrain is not included) and positions good to about ±0.3°. Coordinates are approximate feature centres.',
   },
   {
     q: 'Why do some sites have no coordinates?',
-    a: 'NASA’s August 2022 announcement named 13 Artemis III candidate regions but published no numeric coordinates for them. Only three regions have coordinates verified against a NASA or USGS source — Malapert Massif, Mons Mouton and Shackleton crater. The other eleven are listed with “no verified coordinates” and excluded from every calculation, instead of being plotted with a guessed point.',
+    a: 'NASA’s August 2022 announcement named 13 Artemis III candidate regions but published no numeric coordinates for them. Only three regions have coordinates verified against a NASA or USGS source: Malapert Massif, Mons Mouton and Shackleton crater. The other eleven are listed with “no verified coordinates” and excluded from every calculation, instead of being plotted with a guessed point.',
   },
 ];
 
@@ -50,7 +50,7 @@ export default function FaqSection() {
         <Link to="/navigator" className="text-accent underline">
           Open the Navigator
         </Link>{' '}
-        and try a site and a date yourself — the numbers update live.
+        and try a site and a date yourself. The numbers update live.
       </p>
     </section>
   );

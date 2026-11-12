@@ -18,11 +18,11 @@ export default function CompositionPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <p className="text-sm font-medium uppercase tracking-wider text-accent">Science Context</p>
-      <h1 className="mt-1 text-3xl font-bold">What is the Moon made of?</h1>
+      <h1 className="mt-1 text-3xl font-bold">The Moon&apos;s makeup</h1>
       <p className="mt-3 text-base leading-relaxed text-slate-300">
-        Look at the Moon and you see two kinds of ground: bright highlands and
-        dark plains. They are different rocks, from different times — and both
-        are still there for a lander to stand on.{' '}
+        The Moon has two kinds of ground: bright highlands and dark plains.
+        They are different rocks from different times, and a lander can stand
+        on both.{' '}
         <SourceBadge ids={['nasa-composition', 'open-univ-virtual-microscope']} />
       </p>
 
@@ -113,7 +113,7 @@ export default function CompositionPage() {
         ))}
       </div>
       <p className="mt-3 text-xs text-slate-500">
-        Sample photos are not hosted here — the cards link out to the Washington
+        Sample photos are not hosted here. The cards link out to the Washington
         University in St. Louis Apollo samples page.
       </p>
 

@@ -76,8 +76,9 @@ export default function HeroSection() {
           style={{ animationDelay: '360ms' }}
           className="mt-4 max-w-xl text-base text-slate-300 motion-safe:animate-fade-up"
         >
-          Every NASA CLPS lunar mission — landers, payloads, landing sites, and status — on one
-          interactive Moon map. Built for students, educators, and mission enthusiasts.
+          Every NASA CLPS lunar mission on one interactive Moon map: landers,
+          payloads, landing sites, and status. Built for students, educators,
+          and mission enthusiasts.
         </p>
         <div
           style={{ animationDelay: '460ms' }}

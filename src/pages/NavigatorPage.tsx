@@ -170,7 +170,7 @@ export default function NavigatorPage() {
       <header className="mb-4">
         <h1 className="text-2xl font-bold">Sun &amp; Earth Navigator</h1>
         <p className="mt-1 max-w-3xl text-slate-300">
-          Pick a landing site and a date — see the Sun and Earth from the surface, and
+          Pick a landing site and a date. See the Sun and Earth from the surface, and
           how much power and communication time the site gets. Built for the NASA Space
           Apps Challenge 2026, “Lunar Landing Site Navigator”.
         </p>
@@ -295,8 +295,8 @@ export default function NavigatorPage() {
               {copied ? '✓ Link copied' : 'Copy shareable link'}
             </button>
             <p className="text-xs text-slate-400">
-              Site, date, window and Sun-disc mode live in the URL — share it and the
-              same view opens.
+              Site, date, window and Sun-disc mode live in the URL, so sharing it opens
+              the same view.
             </p>
           </div>
         </div>
@@ -350,8 +350,8 @@ export default function NavigatorPage() {
             </div>
             <p className="mt-2 text-xs text-slate-400">
               {view === 'surface'
-                ? `Surface view — standing at ${site.siteName}, looking across the ground toward the horizon at the ${currentState.sun.up ? 'Sun' : 'Earth'}’s azimuth. Drag is disabled here; switch back to orbit to rotate.`
-                : 'Orbit view — drag to rotate, scroll to zoom. The pin marks the site; the terminator follows the real Sun direction.'}
+                ? `Surface view: standing at ${site.siteName}, looking across the ground toward the horizon at the ${currentState.sun.up ? 'Sun' : 'Earth'}’s azimuth. Drag is disabled here; switch back to orbit to rotate.`
+                : 'Orbit view: drag to rotate, scroll to zoom. The pin marks the site; the terminator follows the real Sun direction.'}
             </p>
           </div>
 
@@ -413,7 +413,7 @@ export default function NavigatorPage() {
                 regions, NASA/USGS Gazetteer — approximate feature centres).
               </p>
               <p>
-                Limits: geometric ideal horizon — terrain obstruction is NOT included, so
+                Limits: geometric ideal horizon, terrain obstruction is NOT included, so
                 a real lander behind a ridge sees less sky than this. Positions are
                 good to about ±0.3°. Nothing here is survey-grade. Sun 3D model: NASA
                 Solar System Exploration, public domain. Earth globe is stylized, not

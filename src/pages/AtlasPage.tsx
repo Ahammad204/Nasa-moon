@@ -99,7 +99,7 @@ export default function AtlasPage() {
 
       <p className="mt-6 text-sm">
         <Link to="/moon-interior" className="text-accent underline">
-          What is inside the Moon? →
+          Inside the Moon →
         </Link>{' '}
         ·{' '}
         <Link to="/library" className="text-accent underline">

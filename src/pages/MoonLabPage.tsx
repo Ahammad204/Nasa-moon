@@ -81,7 +81,7 @@ export default function MoonLabPage() {
         </h1>
         <p className="mt-2 text-base text-slate-300">
           The Moon pulls about six times weaker than Earth. Pick a mass and
-          see what it would weigh up there — and how long a radio signal takes
+          see what it would weigh up there, and how long a radio signal takes
           to make the trip home.
         </p>
       </header>
@@ -151,7 +151,7 @@ export default function MoonLabPage() {
           <span className="font-semibold tabular-nums text-sky-300">
             {earthN.toFixed(2)} N
           </span>{' '}
-          on Earth — about one sixth. You would feel light, but your mass (and
+          on Earth. About one sixth. You would feel light, but your mass (and
           your inertia) would not change at all.
         </p>
 
@@ -192,7 +192,7 @@ export default function MoonLabPage() {
             <p className="text-2xl font-bold tabular-nums text-sky-300">
               {roundTrip.toFixed(3)} s
             </p>
-            <p className="text-sm text-slate-400">round trip — ask, then wait</p>
+            <p className="text-sm text-slate-400">round trip: ask, then wait</p>
           </div>
         </div>
         <p className="mt-3 text-sm text-slate-300">

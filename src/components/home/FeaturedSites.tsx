@@ -79,7 +79,7 @@ export default function FeaturedSites() {
       </h2>
       <p className="mt-1 max-w-2xl text-slate-300">
         Sunlight and Earth visibility over one lunar day (29.5 days from now).
-        Only these three Artemis regions have verified coordinates — the other
+        Only these three Artemis regions have verified coordinates. The other
         eleven are listed on the South Pole page with no numbers guessed.
       </p>
 

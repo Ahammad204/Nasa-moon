@@ -40,16 +40,16 @@ export default function MoonInteriorPage() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-8">
       <p className="text-sm font-medium uppercase tracking-wider text-accent">Science Context</p>
-      <h1 className="mt-1 text-3xl font-bold">What is inside the Moon?</h1>
+      <h1 className="mt-1 text-3xl font-bold">Inside the Moon</h1>
       <p className="mt-3 text-base leading-relaxed text-slate-300">
-        The Moon is not solid rock all the way down. It has a crust, a mantle and
-        an iron core — and the sizes NASA measures today are different from the
-        older diagrams many textbooks still print.{' '}
+        The Moon has a crust, a mantle and an iron core. The sizes NASA
+        measures today differ from the older diagrams many textbooks still
+        print.{' '}
         <SourceBadge ids={['nasa-moon-facts', 'nasa-composition']} />
       </p>
       <p className="mt-2 text-sm text-slate-400">
         Moon&apos;s mean radius: {radius?.display ?? '1,737.4 km'}. The drawing below
-        is schematic, not to scale — a true-scale 40 km crust would be a hairline.
+        is schematic, not to scale. A true-scale 40 km crust would be a hairline.
       </p>
 
       <div className="mt-6">
@@ -147,14 +147,14 @@ export default function MoonInteriorPage() {
 
       <p className="mt-4 rounded-lg border border-space-700 bg-space-900 p-4 text-sm text-slate-400">
         Note: older diagrams show a 60 km near-side / 100 km far-side crust and a
-        core of about 400 km radius. NASA&apos;s current values — 40 km / 60 km crust
-        and a solid inner core of about 240 km radius plus about 90 km of liquid
-        shell — are used here.
+        core of about 400 km radius. NASA&apos;s current values are used here:
+        40 km / 60 km crust, and a solid inner core of about 240 km radius
+        plus about 90 km of liquid shell.
       </p>
 
       <p className="mt-6 text-sm">
         <Link to="/composition" className="text-accent underline">
-          What is the Moon made of? →
+          The Moon&apos;s makeup →
         </Link>{' '}
         ·{' '}
         <Link to="/library" className="text-accent underline">

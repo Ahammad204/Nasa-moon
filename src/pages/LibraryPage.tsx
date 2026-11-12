@@ -44,7 +44,7 @@ export default function LibraryPage() {
         <p className="mt-2 text-base text-slate-300">
           Nothing here is taken on trust. Each conclusion below is one sentence
           in our own words, linked to the NASA, USGS or university source it
-          comes from — and to the page in this app where the fact is used.
+          comes from, and to the page in this app where the fact is used.
         </p>
       </header>
 
