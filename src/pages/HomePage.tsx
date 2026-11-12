@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import FeatureCards from '../components/FeatureCards';
 import FeaturedSites from '../components/home/FeaturedSites';
+import HowItWorks from '../components/home/HowItWorks';
 import MissionTimeline from '../components/home/MissionTimeline';
 import MoonRightNow from '../components/home/MoonRightNow';
 import HeroSection from '../components/HeroSection';
@@ -16,6 +17,7 @@ export default function HomePage() {
       <MoonRightNow />
       <MissionTimeline />
       <FeaturedSites />
+      <HowItWorks />
       <section className="mt-8 rounded-lg border border-space-800 bg-space-900 p-5 shadow-panel">
         <h2 className="text-xl font-semibold">South Pole — power &amp; communication</h2>
         <p className="mt-2 max-w-3xl text-sm text-slate-300">
