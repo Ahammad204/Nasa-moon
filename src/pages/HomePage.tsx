@@ -1,6 +1,7 @@
 import FeatureCards from '../components/FeatureCards';
 import FeaturedSites from '../components/home/FeaturedSites';
 import HowItWorks from '../components/home/HowItWorks';
+import MapTeaser from '../components/home/MapTeaser';
 import MissionTimeline from '../components/home/MissionTimeline';
 import MoonRightNow from '../components/home/MoonRightNow';
 import SouthPoleSpotlight from '../components/home/SouthPoleSpotlight';
@@ -19,6 +20,7 @@ export default function HomePage() {
       <FeaturedSites />
       <HowItWorks />
       <SouthPoleSpotlight />
+      <MapTeaser />
     </>
   );
 }
