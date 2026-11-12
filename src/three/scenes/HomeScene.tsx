@@ -1,33 +1,16 @@
 import { useFrame, useThree } from '@react-three/fiber';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { hasMapPosition, missions } from '../../lib/missions';
 import MoonModel from '../primitives/MoonModel';
-import { latLonToVector3, MARKER_GEO, MARKER_MAT } from '../primitives/Marker3D';
 import { scene } from '../sceneStore';
 
-// Home hero: wireframe moon with real landing-site markers (correct-ish relative
-// positions from the dataset). The whole group spins so markers stay put on
-// their features — and the hero slot above it is a drag handle (scene.hero), so
-// the user can grab the moon directly; the auto-spin eases back after release.
+// Home hero: plain spinning moon, no markers. Landing-site markers live on
+// the /map globe only. The whole group spins, and the hero slot above it is
+// a drag handle (scene.hero), so the user can grab the moon directly; the
+// auto-spin eases back after release.
 export default function HomeScene() {
   const groupRef = useRef<THREE.Group>(null);
   const spinRef = useRef(0.05);
-
-  const markers = useMemo(
-    () =>
-      missions
-        .filter(hasMapPosition)
-        .map((m) => ({
-          id: m.id,
-          pos: latLonToVector3(
-            m.landingSite!.latitude!,
-            m.landingSite!.longitude!,
-            1.5 * 1.03
-          ),
-        })),
-    []
-  );
 
   const { size } = useThree();
 
@@ -76,9 +59,6 @@ export default function HomeScene() {
     <>
       <group ref={groupRef} position={moonPos} scale={compact ? 0.62 : 1}>
         <MoonModel radius={1.5} spin={0} />
-        {markers.map((m) => (
-          <mesh key={m.id} geometry={MARKER_GEO} material={MARKER_MAT} position={m.pos} />
-        ))}
       </group>
       {/* World-fixed fill (same fix as MapScene): the key light rides the
           spinning group, so at some phases the camera-facing half goes black. */}
