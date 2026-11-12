@@ -1,15 +1,32 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useCompare } from '../components/CompareContext';
 import CompareCards from '../components/CompareCards';
+import SiteConditionsSection from '../components/CompareConditions';
 import CompareTable from '../components/CompareTable';
+import {
+  useCompareWindowState,
+  windowLabel,
+} from '../components/compare/useCompareWindowState';
 import EmptyState from '../components/EmptyState';
+import { computeSiteConditions } from '../lib/compareConditions';
 import { getMissionById } from '../lib/missions';
 import { setCompareIds } from '../three/sceneStore';
 
 export default function ComparePage() {
   const { ids, remove } = useCompare();
-  const selected = ids.map((id) => getMissionById(id)).filter((m) => m !== undefined);
+  const selected = useMemo(
+    () => ids.map((id) => getMissionById(id)).filter((m) => m !== undefined),
+    [ids],
+  );
+  const { state: window, update: updateWindow } = useCompareWindowState();
+
+  // Site conditions share one window (start + length + Sun-disc mode) across
+  // the desktop table and the mobile cards; computeWindow caches per site.
+  const conditions = useMemo(
+    () => computeSiteConditions(selected, window.windowStart, window.days, window.sunDisc),
+    [selected, window.windowStart, window.days, window.sunDisc],
+  );
 
   // Mirror the URL-backed compare set into the shared 3D scene (L04).
   useEffect(() => {
@@ -52,8 +69,19 @@ export default function ComparePage() {
         <CompareTable missions={selected} />
       </div>
       <div className="md:hidden">
-        <CompareCards missions={selected} />
+        <CompareCards
+          missions={selected}
+          conditions={conditions}
+          windowHours={window.windowHours}
+          windowLabelText={windowLabel(window.windowStart, window.days)}
+        />
       </div>
+
+      <SiteConditionsSection
+        conditions={conditions}
+        window={window}
+        updateWindow={updateWindow}
+      />
     </section>
   );
 }
