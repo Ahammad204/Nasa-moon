@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getMissionById, hasMapPosition, missions } from '../../lib/missions';
+import { computableSites } from '../../lib/sites';
 
 /**
  * Sun & Earth Navigator — state lives in the query string so every view is
@@ -32,13 +33,26 @@ export interface NavigatorSiteOption {
 }
 
 export function navigatorSiteOptions(): NavigatorSiteOption[] {
-  return missions.filter(hasMapPosition).map((m) => ({
+  // Missions first (existing order preserved — shareable URLs keep working),
+  // then the south-pole Artemis III candidate regions and Shackleton.
+  // Sites without verified coordinates are excluded here; they are still
+  // listed on the South Pole page with a "no verified coordinates" note.
+  const missionOptions = missions.filter(hasMapPosition).map((m) => ({
     id: m.id,
     name: m.name,
     siteName: m.landingSite?.name ?? 'Landing site',
     latitude: m.landingSite!.latitude!,
     longitude: m.landingSite!.longitude!,
   }));
+  const poleOptions = computableSites().map((s) => ({
+    id: s.id,
+    name: s.name,
+    siteName:
+      s.kind === 'artemis-candidate' ? 'Artemis III candidate region' : 'South-pole crater',
+    latitude: s.latitude!,
+    longitude: s.longitude!,
+  }));
+  return [...missionOptions, ...poleOptions];
 }
 
 export interface NavigatorState {

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { missions } from './missions';
-import type { DatePrecision, Mission, MissionStatus } from './types';
+import { southPoleSites } from './sites';
+import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
 const STATUSES: MissionStatus[] = [
   'upcoming',
@@ -101,6 +102,77 @@ describe('data validation (docs/DATA_SCHEMA.md rules)', () => {
           expect(date).toMatch(byPrecision[precision!]);
         }
       });
+    });
+  });
+});
+
+describe('south-pole sites validation (Phase 4 data-honesty rules)', () => {
+  const sites: SouthPoleSite[] = southPoleSites;
+
+  it('dataset lists the 13 Artemis III candidate regions plus Shackleton', () => {
+    expect(sites.length).toBe(14);
+    expect(sites.filter((s) => s.kind === 'artemis-candidate').length).toBe(13);
+    expect(sites.filter((s) => s.kind === 'crater').length).toBe(1);
+  });
+
+  it('id is unique and matches /^sp-[a-z0-9-]+$/', () => {
+    const ids = sites.map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    ids.forEach((id) => expect(id).toMatch(/^sp-[a-z0-9-]+$/));
+  });
+
+  it('name is a non-empty string; kind is a known value', () => {
+    sites.forEach((s) => {
+      expect(s.name.trim().length).toBeGreaterThan(0);
+      expect(['artemis-candidate', 'crater']).toContain(s.kind);
+    });
+  });
+
+  it('sources.length >= 1 and every url starts with https://', () => {
+    sites.forEach((s) => {
+      expect(s.sources.length).toBeGreaterThanOrEqual(1);
+      s.sources.forEach((src) => {
+        expect(src.url.startsWith('https://')).toBe(true);
+        expect(src.label.trim().length).toBeGreaterThan(0);
+        expect(src.accessed).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      });
+    });
+  });
+
+  it('lastVerified is a valid ISO date', () => {
+    sites.forEach((s) => {
+      expect(s.lastVerified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(Number.isNaN(new Date(s.lastVerified).getTime())).toBe(false);
+    });
+  });
+
+  it('latitude in [-90, 90]; longitude in [-180, 180]; both null or both set', () => {
+    sites.forEach((s) => {
+      expect(s.latitude === null).toBe(s.longitude === null);
+      if (s.latitude != null) {
+        expect(s.latitude).toBeGreaterThanOrEqual(-90);
+        expect(s.latitude).toBeLessThanOrEqual(90);
+      }
+      if (s.longitude != null) {
+        expect(s.longitude).toBeGreaterThanOrEqual(-180);
+        expect(s.longitude).toBeLessThanOrEqual(180);
+      }
+    });
+  });
+
+  it('every site is flagged approximate (feature/region centre, never survey-grade)', () => {
+    sites.forEach((s) => expect(s.coordinatesApproximate).toBe(true));
+  });
+
+  it('every site is a south-pole site (latitude <= -80 or unverified)', () => {
+    sites.forEach((s) => {
+      if (s.latitude != null) expect(s.latitude).toBeLessThanOrEqual(-80);
+    });
+  });
+
+  it('no field contains HTML tags', () => {
+    sites.forEach((s) => {
+      allStrings(s).forEach((str) => expect(str).not.toMatch(HTML_TAG));
     });
   });
 });
