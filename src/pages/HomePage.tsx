@@ -1,5 +1,6 @@
 import FeatureCards from '../components/FeatureCards';
 import FeaturedSites from '../components/home/FeaturedSites';
+import FaqSection from '../components/home/FaqSection';
 import HowItWorks from '../components/home/HowItWorks';
 import MapTeaser from '../components/home/MapTeaser';
 import MissionTimeline from '../components/home/MissionTimeline';
@@ -23,6 +24,7 @@ export default function HomePage() {
       <SouthPoleSpotlight />
       <MapTeaser />
       <TrustSection />
+      <FaqSection />
     </>
   );
 }
