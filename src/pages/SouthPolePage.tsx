@@ -4,6 +4,7 @@ import { computeWindow } from '../lib/astro';
 import type { Site } from '../lib/astro';
 import { hasMapPosition, missions } from '../lib/missions';
 import { hasSiteCoordinates, southPoleSites } from '../lib/sites';
+import HazardBriefing from '../components/HazardBriefing';
 import type { SouthPoleSite } from '../lib/types';
 import {
   fromDatetimeLocalValue,
@@ -566,6 +567,11 @@ export default function SouthPolePage() {
           </div>
         </div>
       )}
+
+      {/* Hazards at the pole itself (Shackleton crater, the deepest point). */}
+      <div className="mt-6">
+        <HazardBriefing site={{ latitude: -89.67, longitude: 129.78 }} siteName="Shackleton crater" />
+      </div>
 
       {/* Sources — tucked away, still complete. */}
       <details className="mt-6 rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">

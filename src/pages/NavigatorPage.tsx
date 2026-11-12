@@ -4,6 +4,7 @@ import { computeWindow, getSunEarthState } from '../lib/astro';
 import type { Site, WindowSample } from '../lib/astro';
 import { useMotionPrefs } from '../lib/motionPrefs';
 import { hasWebGL } from '../lib/webgl';
+import HazardBriefing from '../components/HazardBriefing';
 import HorizonDiagram from '../components/navigator/HorizonDiagram';
 import SunEarthCards, { type NextEventInfo } from '../components/navigator/SunEarthCards';
 import { nextEventFromSamples } from '../components/navigator/eventFromSamples';
@@ -385,6 +386,7 @@ export default function NavigatorPage() {
             current={current}
             stats={stats}
           />
+          <HazardBriefing site={site} siteName={site.siteName} />
           <details className="rounded-lg border border-space-800 bg-space-900 p-4 text-sm shadow-panel">
             <summary className="flex min-h-[44px] cursor-pointer items-center font-medium text-slate-200">
               Method &amp; assumptions

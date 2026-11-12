@@ -196,5 +196,49 @@
    "label": "Why the South Pole?",
    "path": "/why-south-pole"
   }
+ },
+ {
+  "id": "hazard-dust-charging",
+  "sourceIds": [
+   "nasa-solar-wind"
+  ],
+  "text": "With no global magnetic field and almost no atmosphere, solar wind charges the lunar surface, so fine dust can levitate and spark on suits and rovers.",
+  "usedIn": {
+   "label": "South Pole",
+   "path": "/south-pole"
+  }
+ },
+ {
+  "id": "hazard-impacts",
+  "sourceIds": [
+   "nasa-craters"
+  ],
+  "text": "New lunar craters form about 33% faster than previously expected, and their ejecta can travel at about 500 metres per second.",
+  "usedIn": {
+   "label": "South Pole",
+   "path": "/south-pole"
+  }
+ },
+ {
+  "id": "hazard-thermal",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "A lunar lander must survive about +127 °C in sunlight and about −173 °C in the dark — and the long dark stretch is when its batteries are tested most.",
+  "usedIn": {
+   "label": "South Pole",
+   "path": "/south-pole"
+  }
+ },
+ {
+  "id": "hazard-radiation",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "Almost no atmosphere and no global magnetic field mean radiation from the Sun and deep space reaches the lunar surface directly.",
+  "usedIn": {
+   "label": "South Pole",
+   "path": "/south-pole"
+  }
  }
 ]

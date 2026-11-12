@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { useCompare } from '../components/CompareContext';
 import EmptyState from '../components/EmptyState';
+import HazardBriefing from '../components/HazardBriefing';
 import SunEarthPanel from '../components/navigator/SunEarthPanel';
 import PayloadList from '../components/PayloadList';
 import SourceList from '../components/SourceList';
@@ -87,6 +88,17 @@ export default function MissionDetailPage() {
           missionId={mission.id}
         />
       )}
+
+      <div className="mb-6">
+        <HazardBriefing
+          site={
+            site?.latitude != null && site.longitude != null
+              ? { latitude: site.latitude, longitude: site.longitude }
+              : null
+          }
+          siteName={site?.name ?? mission.name}
+        />
+      </div>
 
       {mission.objective && (
         <section className="mb-4">

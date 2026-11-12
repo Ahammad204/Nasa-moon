@@ -3,6 +3,7 @@ import { missions } from './missions';
 import { southPoleSites } from './sites';
 import { conclusions } from './conclusions';
 import waterTimelineData from '../data/water-timeline.json';
+import { hazards } from './hazards';
 import { getSourceById, researchSources } from './sources';
 import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
@@ -223,6 +224,19 @@ describe('water timeline (Science Context)', () => {
       expect(e.lastVerified).toBe('2026-11-12');
       e.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
       if (/viper/i.test(e.summary)) expect(e.summary).toMatch(/planned VIPER/i);
+    });
+  });
+});
+
+describe('hazards (Science Context)', () => {
+  it('4 hazards, every source id resolves, no forbidden hosts', () => {
+    expect(hazards.length).toBe(4);
+    const ids = hazards.map((h) => h.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    hazards.forEach((h) => {
+      expect(h.summary.length).toBeGreaterThan(40);
+      expect(h.lastVerified).toBe('2026-11-12');
+      h.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
     });
   });
 });
