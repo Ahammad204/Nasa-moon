@@ -18,6 +18,7 @@ const NAV = [
   { to: '/map', label: 'Map' },
   { to: '/navigator', label: 'Navigator' },
   { to: '/south-pole', label: 'South Pole' },
+  { to: '/library', label: 'Library' },
   { to: '/compare', label: 'Compare' },
   { to: '/payloads', label: 'Payloads' },
 ];
@@ -209,7 +210,7 @@ export default function AppShell() {
           <p>Mission data: NASA Science, &quot;CLPS Deliveries&quot; (science.nasa.gov).</p>
           <p>Lander details: mission provider pages (Astrobotic, Intuitive Machines, Firefly, …).</p>
           <p className="mt-2 text-slate-400">
-            Geometric model for education. Independent project, not affiliated with or endorsed
+            Educational geometric model. Independent project, not affiliated with or endorsed
             by NASA.
           </p>
           {/* Moved here from the header (boss: declutter) — still one click away. */}

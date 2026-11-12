@@ -16,6 +16,8 @@ const MapPage = lazy(() => import('./pages/MapPage'));
 const NavigatorPage = lazy(() => import('./pages/NavigatorPage'));
 // Lazy: the South Pole page computes a 29.5-day window for every site.
 const SouthPolePage = lazy(() => import('./pages/SouthPolePage'));
+// Lazy: the Research Library is a text-heavy page, kept out of first paint.
+const LibraryPage = lazy(() => import('./pages/LibraryPage'));
 
 export default function App() {
   return (
@@ -29,6 +31,7 @@ export default function App() {
             <Route path="/mission/:id" element={<MissionDetailPage />} />
             <Route path="/navigator" element={<NavigatorPage />} />
             <Route path="/south-pole" element={<SouthPolePage />} />
+            <Route path="/library" element={<LibraryPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/payloads" element={<PayloadsPage />} />
             <Route path="*" element={<NotFoundPage />} />

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { missions } from './missions';
 import { southPoleSites } from './sites';
+import { conclusions } from './conclusions';
+import { getSourceById, researchSources } from './sources';
 import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
 const STATUSES: MissionStatus[] = [
@@ -173,6 +175,35 @@ describe('south-pole sites validation (Phase 4 data-honesty rules)', () => {
   it('no field contains HTML tags', () => {
     sites.forEach((s) => {
       allStrings(s).forEach((str) => expect(str).not.toMatch(HTML_TAG));
+    });
+  });
+});
+
+describe('research sources + library conclusions (Science Context)', () => {
+  it('sources.json: 10 approved sources, unique ids, https urls, no forbidden hosts', () => {
+    const ids = researchSources.map((s) => s.id);
+    expect(researchSources.length).toBe(10);
+    expect(new Set(ids).size).toBe(ids.length);
+    researchSources.forEach((s) => {
+      expect(s.url.startsWith('https://')).toBe(true);
+      expect(s.url).not.toMatch(/facebook\.com|jatan\.space|britannica/i);
+      expect(s.accessed).toBe('2026-11-12');
+      expect(s.shortLabel.length).toBeGreaterThan(0);
+      expect(s.title.length).toBeGreaterThan(0);
+      expect(s.publisher.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('conclusions.json: at least 12 conclusions, every source id resolves, usedIn paths are in-app', () => {
+    expect(conclusions.length).toBeGreaterThanOrEqual(12);
+    const ids = conclusions.map((c) => c.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    conclusions.forEach((c) => {
+      expect(c.text.length).toBeGreaterThan(20);
+      expect(c.sourceIds.length).toBeGreaterThanOrEqual(1);
+      c.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+      expect(c.usedIn.path.startsWith('/')).toBe(true);
+      expect(c.usedIn.label.length).toBeGreaterThan(0);
     });
   });
 });
