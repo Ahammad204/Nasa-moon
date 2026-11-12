@@ -4,6 +4,7 @@ import { southPoleSites } from './sites';
 import { conclusions } from './conclusions';
 import waterTimelineData from '../data/water-timeline.json';
 import { hazards } from './hazards';
+import { moonConstants } from './moonConstants';
 import { getSourceById, researchSources } from './sources';
 import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
@@ -237,6 +238,29 @@ describe('hazards (Science Context)', () => {
       expect(h.summary.length).toBeGreaterThan(40);
       expect(h.lastVerified).toBe('2026-11-12');
       h.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+    });
+  });
+});
+
+describe('moon constants (Science Context)', () => {
+  it('10 constants match the spec values exactly, every source id resolves', () => {
+    expect(moonConstants.length).toBe(10);
+    const byId = Object.fromEntries(moonConstants.map((c) => [c.id, c]));
+    expect(byId['mean-radius'].value).toBe(1737.4);
+    expect(byId['mean-distance'].value).toBe(384400);
+    expect(byId['surface-gravity'].value).toBe(1.62);
+    expect(byId['surface-gravity'].calcValue).toBe(1.624);
+    expect(byId['mass'].value).toBe(7.342e22);
+    expect(byId['mean-density'].value).toBe(3344);
+    expect(byId['age'].value).toBe(4.5);
+    expect(byId['sidereal-period'].value).toBe(27.32);
+    expect(byId['synodic-month'].value).toBe(29.53);
+    expect(byId['earth-gravity'].value).toBe(9.80665);
+    expect(byId['speed-of-light'].value).toBe(299792.458);
+    moonConstants.forEach((c) => {
+      expect(c.lastVerified).toBe('2026-11-12');
+      expect(c.display.length).toBeGreaterThan(0);
+      c.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
     });
   });
 });

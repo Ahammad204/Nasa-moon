@@ -1,0 +1,117 @@
+[
+ {
+  "display": "1,737.4 km",
+  "id": "mean-radius",
+  "label": "Mean radius",
+  "note": "NASA's text rounds this to about 1,740 km.",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "km",
+  "value": 1737.4,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "384,400 km",
+  "id": "mean-distance",
+  "label": "Mean distance from Earth",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "km",
+  "value": 384400,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "calcValue": 1.624,
+  "display": "1.62 m/s²",
+  "id": "surface-gravity",
+  "label": "Surface gravity",
+  "note": "1.624 m/s² is used for calculations.",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "m/s²",
+  "value": 1.62,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "7.342 × 10²² kg",
+  "id": "mass",
+  "label": "Mass",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "kg",
+  "value": 7.342e+22,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "3,344 kg/m³",
+  "id": "mean-density",
+  "label": "Mean density",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "kg/m³",
+  "value": 3344,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "~4.5 billion years",
+  "id": "age",
+  "label": "Age",
+  "note": "Approximate.",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "billion years",
+  "value": 4.5,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "27.32 d",
+  "id": "sidereal-period",
+  "label": "Sidereal period (one spin)",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "d",
+  "value": 27.32,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "29.53 d",
+  "id": "synodic-month",
+  "label": "Synodic month (one phase cycle)",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "d",
+  "value": 29.53,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "9.80665 m/s²",
+  "id": "earth-gravity",
+  "label": "Earth surface gravity (standard)",
+  "note": "Standard value, used as the comparison.",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "m/s²",
+  "value": 9.80665,
+  "lastVerified": "2026-11-12"
+ },
+ {
+  "display": "299,792.458 km/s",
+  "id": "speed-of-light",
+  "label": "Speed of light in vacuum",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "unit": "km/s",
+  "value": 299792.458,
+  "lastVerified": "2026-11-12"
+ }
+]

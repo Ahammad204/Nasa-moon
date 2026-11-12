@@ -37,6 +37,10 @@ as a static React app over verified NASA/USGS data.
   potential — labelled "Geometric estimate — terrain not included"
 - **Payload explorer**: browse payloads and see which missions carried them
 - **Charts** by status and provider that respond to the active filters
+- **Research Library** at `/library`: every conclusion the app states, one sentence each, with its source badge and the page where the fact is used — searchable and filterable by source type
+- **Why the South Pole?** at `/why-south-pole`: the six-step story of lunar water (1961–2023), what it means for landing, and the NASA water video (click-to-load)
+- **Hazard briefings**: static charging and dust, fresh impacts, thermal extremes and radiation context on mission-detail, Navigator and south-pole pages, with computed longest-dark and sunlit values per site
+- **Moon Lab** at `/moon-lab`: your weight on the Moon (slider 1–150 kg), Earth–Moon signal delay, and a Moon-at-a-glance constants table — plus a compact teaser on the landing page
 - **Shareable URLs**: search, filters, compare set and map selection all live in the query string
 
 ## Setup
@@ -62,6 +66,18 @@ lazy-loaded chunk) · Recharts (charts, lazy-loaded chunk) · Three.js + GLTFLoa
 3D scene, lazy-loaded chunk; NASA Sun glTF) · `astronomy-engine` (Sun/Moon ephemeris and
 libration for the Sun & Earth model) · Vitest · `react-router-dom`.
 Static site: all data bundled as `src/data/missions.json` and `src/data/sites.json`, no backend.
+
+**Science Context data layer** (three layers, strictly separated): data in
+`src/data/sources.json`, `src/data/moon-constants.json`,
+`src/data/water-timeline.json`, `src/data/hazards.json` and
+`src/data/conclusions.json` (every record carries `sources` and
+`lastVerified`; unknown = `null`); pure engine functions in `src/lib/physics/`
+(weight, light time) and `src/lib/astro/`; React components only render data
++ engine output. No number reaches the UI except through the data layer or
+engine, with its source attached. Research sources are listed in
+`src/data/sources.json` (NASA Science pages, NASA SVS, USGS Gazetteer,
+Washington University in St. Louis, The Open University) and shown in the app
+via the Research Library at `/library`.
 
 ## Data and sources
 
@@ -92,6 +108,12 @@ Sun & Earth positions: `astronomy-engine` npm package (MIT) — Sun/Moon ephemer
 libration; method in [`docs/SUN_EARTH_METHOD.md`](docs/SUN_EARTH_METHOD.md).
 Sun 3D model: NASA 3D Resources (solarsystem.nasa.gov); Moon 3D model: NASA Solar System
 Exploration, "Earth's Moon" — public domain.
+Science Context sources: NASA Science Moon pages (Facts, Moon Water and Ices, Solar Wind,
+Composition, Why Study Lunar Craters?), NASA Scientific Visualization Studio (Tour of the
+Moon, SVS 3874), NASA water video (YouTube), USGS Gazetteer of Planetary Nomenclature,
+Washington University in St. Louis (Apollo sample photos, credit Randy Korotev), The Open
+University Virtual Microscope (Apollo 17). Full list with links: `src/data/sources.json`
+and the Research Library at `/library`.
 
 ## License
 
@@ -99,7 +121,7 @@ Exploration, "Earth's Moon" — public domain.
   for non-commercial use (NASA media guidelines); the WAC mosaic is public domain with a
   "please cite authors" request (USGS Astrogeology record). Attribution is displayed in the app
   footer. Tile-service terms are still unconfirmed and tracked in `docs/DATA_GAPS.md`.
-- **Code**: MIT — see [`LICENSE`](LICENSE). Geometric model for education. Independent
+- **Code**: MIT — see [`LICENSE`](LICENSE). Educational geometric model. Independent
   project, not affiliated with or endorsed by NASA.
 
 ## Measured performance (Lighthouse, production build, 2026-09-29)
@@ -116,6 +138,8 @@ NASA tile loading and Leaflet's generated controls.
 
 ```
 src/            app (pages, components, lib pure functions, data/missions.json + sites.json)
+src/data/       sources.json, moon-constants.json, water-timeline.json, hazards.json, conclusions.json
+src/lib/physics/  weight + light-time engine (pure, tested)
 docs/           screenshots, DATA_SOURCES.md, DATA_GAPS.md, DATA_SCHEMA.md, SUN_EARTH_METHOD.md
 public/models/  Moon + Sun 3D models (Sun glTF not committed — see docs/DATA_GAPS.md)
 ```

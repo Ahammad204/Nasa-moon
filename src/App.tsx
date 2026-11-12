@@ -18,6 +18,8 @@ const NavigatorPage = lazy(() => import('./pages/NavigatorPage'));
 const SouthPolePage = lazy(() => import('./pages/SouthPolePage'));
 // Lazy: the Research Library is a text-heavy page, kept out of first paint.
 const LibraryPage = lazy(() => import('./pages/LibraryPage'));
+// Lazy: the Moon Lab (weight calculator + constants).
+const MoonLabPage = lazy(() => import('./pages/MoonLabPage'));
 // Lazy: the "Why the South Pole?" story page (timeline + video poster).
 const WhySouthPolePage = lazy(() => import('./pages/WhySouthPolePage'));
 
@@ -34,6 +36,7 @@ export default function App() {
             <Route path="/navigator" element={<NavigatorPage />} />
             <Route path="/south-pole" element={<SouthPolePage />} />
             <Route path="/why-south-pole" element={<WhySouthPolePage />} />
+            <Route path="/moon-lab" element={<MoonLabPage />} />
             <Route path="/library" element={<LibraryPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/payloads" element={<PayloadsPage />} />

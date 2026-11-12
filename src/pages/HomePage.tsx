@@ -4,6 +4,7 @@ import FaqSection from '../components/home/FaqSection';
 import HowItWorks from '../components/home/HowItWorks';
 import MapTeaser from '../components/home/MapTeaser';
 import MissionTimeline from '../components/home/MissionTimeline';
+import MoonLabTeaser from '../components/home/MoonLabTeaser';
 import TrustSection from '../components/home/TrustSection';
 import MoonRightNow from '../components/home/MoonRightNow';
 import SouthPoleSpotlight from '../components/home/SouthPoleSpotlight';
@@ -22,6 +23,7 @@ export default function HomePage() {
       <FeaturedSites />
       <HowItWorks />
       <SouthPoleSpotlight />
+      <MoonLabTeaser />
       <MapTeaser />
       <TrustSection />
       <FaqSection />

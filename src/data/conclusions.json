@@ -240,5 +240,49 @@
    "label": "South Pole",
    "path": "/south-pole"
   }
+ },
+ {
+  "id": "weight-one-sixth",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "A 20 kg object weighs about 32.5 N on the Moon versus about 196 N on Earth — roughly one sixth.",
+  "usedIn": {
+   "label": "Moon Lab",
+   "path": "/moon-lab"
+  }
+ },
+ {
+  "id": "light-time-moon",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "Light takes about 1.28 seconds to travel from the Moon to Earth one way, and about 2.56 seconds for a round trip.",
+  "usedIn": {
+   "label": "Moon Lab",
+   "path": "/moon-lab"
+  }
+ },
+ {
+  "id": "moon-age",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "The Moon is about 4.5 billion years old.",
+  "usedIn": {
+   "label": "Moon Lab",
+   "path": "/moon-lab"
+  }
+ },
+ {
+  "id": "moon-mass-density",
+  "sourceIds": [
+   "nasa-moon-facts"
+  ],
+  "text": "The Moon's mass is 7.342 × 10²² kg and its mean density is 3,344 kg/m³.",
+  "usedIn": {
+   "label": "Moon Lab",
+   "path": "/moon-lab"
+  }
  }
 ]

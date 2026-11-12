@@ -19,6 +19,7 @@ const NAV = [
   { to: '/navigator', label: 'Navigator' },
   { to: '/south-pole', label: 'South Pole' },
   { to: '/why-south-pole', label: 'Why South Pole' },
+  { to: '/moon-lab', label: 'Moon Lab' },
   { to: '/library', label: 'Library' },
   { to: '/compare', label: 'Compare' },
   { to: '/payloads', label: 'Payloads' },
