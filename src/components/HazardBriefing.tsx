@@ -49,36 +49,46 @@ export default function HazardBriefing({
         </p>
       )}
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 space-y-3">
         {hazards.map((h) => (
           <article
             key={h.id}
-            className="rounded-lg border border-space-800 bg-space-950 p-3"
+            className="rounded-lg border border-space-800 bg-space-950 p-4"
           >
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-semibold text-slate-100">
-                <span aria-hidden="true">{h.icon} </span>
-                {h.title}
-              </h3>
-              <span className="shrink-0 rounded-full bg-space-800 px-2 py-0.5 text-xs text-slate-300">
-                context
+            <div className="flex gap-3">
+              <span
+                aria-hidden="true"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-space-900 text-xl"
+              >
+                {h.icon}
               </span>
-            </div>
-            <p className="mt-1 text-sm text-slate-300">{h.summary}</p>
-            {(h.id === 'thermal-extremes' || h.id === 'static-charging-dust') &&
-              geometry && (
-                <p className="mt-2 rounded bg-space-900 p-2 text-sm text-slate-200">
-                  <span className="tabular-nums">
-                    Longest dark stretch: {geometry.longestDarkHours.toFixed(0)} h
-                    {' · '}Sunlit: {geometry.sunlitPct.toFixed(0)}%
-                  </span>{' '}
-                  <span className="text-slate-400">
-                    (next 29.5 d from now, computed)
-                  </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="text-base font-semibold leading-snug text-slate-100">
+                  {h.title}
+                </h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-300">
+                  {h.summary}
                 </p>
-              )}
-            <div className="mt-2">
-              <SourceBadge ids={h.sourceIds} />
+                {(h.id === 'thermal-extremes' ||
+                  h.id === 'static-charging-dust') &&
+                  geometry && (
+                    <p className="mt-2 rounded bg-space-900 p-2 text-sm text-slate-200">
+                      <span className="tabular-nums">
+                        Longest dark stretch: {geometry.longestDarkHours.toFixed(0)}{' '}
+                        h · Sunlit: {geometry.sunlitPct.toFixed(0)}%
+                      </span>{' '}
+                      <span className="block text-xs text-slate-400">
+                        Next 29.5 d from now, computed
+                      </span>
+                    </p>
+                  )}
+                <div className="mt-2.5 flex flex-wrap items-center justify-between gap-2">
+                  <SourceBadge ids={h.sourceIds} />
+                  <span className="shrink-0 rounded-full bg-space-800 px-2 py-0.5 text-xs text-slate-300">
+                    context
+                  </span>
+                </div>
+              </div>
             </div>
           </article>
         ))}
