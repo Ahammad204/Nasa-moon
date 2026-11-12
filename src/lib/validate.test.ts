@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { missions } from './missions';
 import { southPoleSites } from './sites';
 import { conclusions } from './conclusions';
+import waterTimelineData from '../data/water-timeline.json';
 import { getSourceById, researchSources } from './sources';
 import type { DatePrecision, Mission, MissionStatus, SouthPoleSite } from './types';
 
@@ -204,6 +205,24 @@ describe('research sources + library conclusions (Science Context)', () => {
       c.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
       expect(c.usedIn.path.startsWith('/')).toBe(true);
       expect(c.usedIn.label.length).toBeGreaterThan(0);
+    });
+  });
+});
+
+interface WaterTimelineEvent { year: string; title: string; summary: string; sourceIds: string[]; lastVerified: string; }
+const waterTimeline = waterTimelineData as unknown as WaterTimelineEvent[];
+
+describe('water timeline (Science Context)', () => {
+  it('6 events in year order, every source id resolves, VIPER only ever described as planned', () => {
+    expect(waterTimeline.length).toBe(6);
+    const years = waterTimeline.map((e) => e.year);
+    expect(years).toEqual(['1961', '1994–1998', '2009', '2018', '2020', '2023']);
+    waterTimeline.forEach((e) => {
+      expect(e.title.length).toBeGreaterThan(0);
+      expect(e.summary.length).toBeGreaterThan(20);
+      expect(e.lastVerified).toBe('2026-11-12');
+      e.sourceIds.forEach((sid) => expect(getSourceById(sid)).toBeDefined());
+      if (/viper/i.test(e.summary)) expect(e.summary).toMatch(/planned VIPER/i);
     });
   });
 });

@@ -108,6 +108,12 @@ export default function SouthPoleSpotlight() {
         >
           Open the Navigator →
         </Link>
+        <Link
+          to="/why-south-pole"
+          className="inline-flex min-h-[44px] items-center rounded-md border border-space-700 px-5 text-sm text-slate-200 hover:bg-space-900"
+        >
+          Why the south pole? →
+        </Link>
       </div>
       <p className="mt-3 text-xs text-slate-400">
         Geometric estimate — ideal flat horizon, terrain not included.

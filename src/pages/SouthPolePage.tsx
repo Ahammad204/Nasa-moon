@@ -606,7 +606,10 @@ export default function SouthPolePage() {
           <Link to="/navigator" className="text-accent underline">
             Open the Sun &amp; Earth Navigator
           </Link>
-          {' — pick any site above and watch the Sun and Earth move over a lunar day.'}
+          {' — pick any site above and watch the Sun and Earth move over a lunar day.'}{' '}
+          <Link to="/why-south-pole" className="text-accent underline">
+            Why the south pole? Read the story →
+          </Link>
         </p>
       </details>
     </section>
