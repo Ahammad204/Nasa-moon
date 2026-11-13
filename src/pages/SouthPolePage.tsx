@@ -153,6 +153,36 @@ export default function SouthPolePage() {
     return pts;
   }, []);
 
+  // Labels share an anchor when a CLPS mission lands exactly on a candidate
+  // site (TO20A sits on Mons Mouton), and neighbours near the pole crowd
+  // each other — the texts printed on top of one another. Nudge a colliding
+  // label away in 18px steps (down in the top half, up in the bottom half)
+  // until its box clears the placed ones. Points never move, only labels.
+  const labelPos = useMemo(() => {
+    const placed: { x: number; y: number; halfW: number }[] = [];
+    const out = new Map<string, { x: number; y: number }>();
+    for (const p of points) {
+      const { x, y } = project(p.latitude, p.longitude);
+      const outward = { x: x - CX, y: y - CY };
+      const len = Math.hypot(outward.x, outward.y) || 1;
+      const halfW = (p.label.length * 7.2) / 2;
+      let lx = x + (outward.x / len) * 14;
+      let ly = y + (outward.y / len) * 14;
+      const step = ly > CY ? -18 : 18;
+      let bumps = 0;
+      while (
+        bumps < 5 &&
+        placed.some((q) => Math.abs(q.x - lx) < q.halfW + halfW + 4 && Math.abs(q.y - ly) < 16)
+      ) {
+        ly += step;
+        bumps += 1;
+      }
+      placed.push({ x: lx, y: ly, halfW });
+      out.set(p.key, { x: lx, y: ly });
+    }
+    return out;
+  }, [points]);
+
   // Window stats for every computable south-pole site (sub-points are
   // cached and shared across sites in the astro layer).
   const stats = useMemo(() => {
@@ -369,10 +399,7 @@ export default function SouthPolePage() {
             </text>
             {points.map((p) => {
               const { x, y } = project(p.latitude, p.longitude);
-              const outward = { x: x - CX, y: y - CY };
-              const len = Math.hypot(outward.x, outward.y) || 1;
-              const lx = x + (outward.x / len) * 14;
-              const ly = y + (outward.y / len) * 14;
+              const pos = labelPos.get(p.key) ?? { x, y };
               const fill =
                 p.kind === 'candidate' ? '#fbbf24' : p.kind === 'crater' ? '#e2e8f0' : '#38bdf8';
               return (
@@ -381,8 +408,8 @@ export default function SouthPolePage() {
                     <title>{`${p.label} — ${fmtCoord(p.latitude, 'S')}, ${fmtCoord(p.longitude, 'E')}`}</title>
                   </circle>
                   <text
-                    x={lx}
-                    y={ly}
+                    x={pos.x}
+                    y={pos.y}
                     fill="#cbd5e1"
                     fontSize={12}
                     textAnchor="middle"
