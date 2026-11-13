@@ -43,7 +43,10 @@
 //     carries approval "Adopted by IAU"); nothing is invented.
 //   - Unknown values are null, never estimated. Records are never dropped:
 //     a feature type with no category mapping lands in "Other" with its
-//     raw type kept (see CATEGORY_BY_TERM and the run summary).
+//     raw type kept (see CATEGORY_BY_TERM and the run summary). The one
+//     exception is Satellite Feature (SF): per the IAU it is a lettered
+//     satellite crater, so those records are grouped under "Crater" (raw
+//     type and typeName kept — see toRecord).
 //   - The category map lists ONLY types that occur in this download, plus
 //     Fossa and Planum, which are named in the project spec's mapping but
 //     did not occur in the 2026-11-13 download (noted in the run summary
@@ -247,7 +250,16 @@ function toRecord(row, lastVerified) {
 
   const typeName = row.type ?? '';
   const singularTerm = typeName.split(',')[0].trim();
-  const category = CATEGORY_BY_TERM[singularTerm] ?? 'Other';
+  let category = CATEGORY_BY_TERM[singularTerm] ?? 'Other';
+  // Satellite Features are lettered satellite craters, so they belong in
+  // "Crater": the IAU/WGPSN Lunar Task Group lists "lettered craters
+  // (so-called 'satellite features')" among the lunar crater categories
+  // (Shevchenko et al., 40th LPSC, 2009), and "Satellite feature" is a
+  // listed synonym of "Satellite crater". The download carries no finer
+  // distinction — every SF record has typeName "Satellite Feature" — so
+  // this maps all of them. Raw featureType ("SF") and typeName stay
+  // unchanged and visible on the record; only the grouped category moves.
+  if (typeName === 'Satellite Feature') category = 'Crater';
 
   if (typeof row.center_lat !== 'number' || typeof row.center_lon !== 'number') {
     throw new Error(`Record "${row.name}" (id ${id}) is missing centre coordinates.`);
@@ -322,7 +334,12 @@ async function main() {
   for (const r of records) {
     byCategory[r.category] = (byCategory[r.category] ?? 0) + 1;
     byType[r.typeName] = (byType[r.typeName] ?? 0) + 1;
-    if (!(r.typeName.split(',')[0].trim() in CATEGORY_BY_TERM)) {
+    // "Satellite Feature" is mapped to "Crater" in toRecord (lettered
+    // satellite crater per the IAU), so it is not unmapped either.
+    if (
+      !(r.typeName.split(',')[0].trim() in CATEGORY_BY_TERM) &&
+      r.typeName !== 'Satellite Feature'
+    ) {
       unmappedTerms.add(r.typeName);
     }
   }
