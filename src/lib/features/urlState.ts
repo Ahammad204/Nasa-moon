@@ -8,6 +8,8 @@
 //
 // Param names:
 //   cat       comma-separated categories, e.g. cat=Crater,Maria
+//             (Mountain is the default, so it is omitted; an explicit
+//             empty cat= means all categories)
 //   type      comma-separated raw Gazetteer codes, e.g. type=AA,SF
 //   q         name search substring
 //   side      near | far (simple longitude split, see engine.ts)
@@ -19,7 +21,7 @@
 //   near      lat,lon,radiusKm triple, e.g. near=9.62,-20.08,100
 //   mission   CLPS mission id whose landing site is the near-point centre
 //   cell      2.5 | 5 | 10 (cell size, degrees)
-//   mode      heat | markers
+//   mode      heat | markers (markers is the default, so it is omitted)
 //   op        heat-map opacity, 0.1..1
 //   missions  1 = show the CLPS mission overlay
 //   view      globe | flat (globe is the default, so it is omitted)
@@ -35,6 +37,10 @@ export const DEFAULT_CELL_DEG: CellDeg = 5;
 export type FeaturesMapMode = 'heat' | 'markers';
 
 export type FeaturesView = 'globe' | 'flat';
+
+/** Default category filter: Mountain only (114 features, all render as
+ * individual markers without hitting the 500-marker cap). */
+export const DEFAULT_CATEGORIES: string[] = ['Mountain'];
 
 export interface NearPoint {
   lat: number;
@@ -64,7 +70,7 @@ export interface FeaturesUrlState {
 }
 
 export const DEFAULT_FEATURES_URL_STATE: FeaturesUrlState = {
-  categories: [],
+  categories: [...DEFAULT_CATEGORIES],
   rawTypes: [],
   nameQuery: '',
   side: null,
@@ -76,7 +82,7 @@ export const DEFAULT_FEATURES_URL_STATE: FeaturesUrlState = {
   nearPoint: null,
   nearMissionId: null,
   cellDeg: DEFAULT_CELL_DEG,
-  mode: 'heat',
+  mode: 'markers',
   opacity: 0.75,
   showMissions: false,
   view: 'globe',
@@ -125,7 +131,11 @@ function parseNearPoint(raw: string | null): NearPoint | null {
 }
 
 export function parseFeaturesParams(params: URLSearchParams): FeaturesUrlState {
-  const categories = parseList(params.get('cat')).filter(isFeatureCategory);
+  // Absent cat means the default (Mountain); an explicit cat= (empty)
+  // means all categories. A present cat lists exactly those categories.
+  const categories = params.has('cat')
+    ? parseList(params.get('cat')).filter(isFeatureCategory)
+    : [...DEFAULT_CATEGORIES];
   const rawTypes = parseList(params.get('type')).filter((t) => /^[A-Z]{2}$/.test(t));
   const sideRaw = params.get('side');
   const side: 'near' | 'far' | null = sideRaw === 'near' || sideRaw === 'far' ? sideRaw : null;
@@ -152,8 +162,10 @@ export function parseFeaturesParams(params: URLSearchParams): FeaturesUrlState {
     maxDiameterKm = null;
   }
 
+  // Defensive like view: only an explicit 'heat' is heat; anything else
+  // (absent, invalid, 'markers') is the markers default.
   const modeRaw = params.get('mode');
-  const mode: FeaturesMapMode = modeRaw === 'markers' ? 'markers' : 'heat';
+  const mode: FeaturesMapMode = modeRaw === 'heat' ? 'heat' : 'markers';
   // Defensive like mode: only an explicit 'flat' is flat; anything else
   // (absent, invalid, 'globe') is the globe default.
   const viewRaw = params.get('view');
@@ -191,7 +203,10 @@ export function parseFeaturesParams(params: URLSearchParams): FeaturesUrlState {
 /** Serialize back to a query string, omitting every default value. */
 export function serializeFeaturesState(state: FeaturesUrlState): URLSearchParams {
   const next = new URLSearchParams();
-  if (state.categories.length) next.set('cat', state.categories.join(','));
+  const isDefaultCategories =
+    state.categories.length === DEFAULT_CATEGORIES.length &&
+    state.categories.every((c, i) => c === DEFAULT_CATEGORIES[i]);
+  if (!isDefaultCategories) next.set('cat', state.categories.join(','));
   if (state.rawTypes.length) next.set('type', state.rawTypes.join(','));
   if (state.nameQuery.trim()) next.set('q', state.nameQuery.trim());
   if (state.side) next.set('side', state.side);
@@ -208,7 +223,7 @@ export function serializeFeaturesState(state: FeaturesUrlState): URLSearchParams
   }
   if (state.nearMissionId) next.set('mission', state.nearMissionId);
   if (state.cellDeg !== DEFAULT_CELL_DEG) next.set('cell', String(state.cellDeg));
-  if (state.mode !== 'heat') next.set('mode', state.mode);
+  if (state.mode !== 'markers') next.set('mode', state.mode);
   if (state.opacity !== DEFAULT_FEATURES_URL_STATE.opacity) {
     next.set('op', String(state.opacity));
   }

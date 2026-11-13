@@ -67,10 +67,45 @@ describe('parseFeaturesParams', () => {
     expect(s.maxDiameterKm).toBeNull();
     expect(s.nearPoint).toBeNull();
     expect(s.cellDeg).toBe(5);
-    expect(s.mode).toBe('heat');
+    expect(s.mode).toBe('markers');
     expect(s.opacity).toBe(1);
     expect(s.view).toBe('globe');
     expect(s.selectedFeatureId).toBeNull();
+  });
+
+  it('default is globe + individual markers + Mountain only', () => {
+    const s = parseFeaturesParams(new URLSearchParams(''));
+    expect(s.view).toBe('globe');
+    expect(s.mode).toBe('markers');
+    expect(s.categories).toEqual(['Mountain']);
+    expect(s.cellDeg).toBe(5);
+    expect(s.opacity).toBe(0.75);
+  });
+
+  it('an explicit empty cat= means all categories', () => {
+    expect(parseFeaturesParams(new URLSearchParams('cat=')).categories).toEqual([]);
+    expect(parseFeaturesParams(new URLSearchParams('cat=Crater')).categories).toEqual([
+      'Crater',
+    ]);
+  });
+
+  it('serialize omits the Mountain default and keeps cat= for all categories', () => {
+    expect(serializeFeaturesState(DEFAULT_FEATURES_URL_STATE).toString()).toBe('');
+    expect(
+      serializeFeaturesState({ ...DEFAULT_FEATURES_URL_STATE, categories: [] }).toString(),
+    ).toBe('cat=');
+    expect(
+      serializeFeaturesState({ ...DEFAULT_FEATURES_URL_STATE, mode: 'heat' }).toString(),
+    ).toBe('mode=heat');
+  });
+
+  it('round-trips heat mode with all categories', () => {
+    const state: FeaturesUrlState = {
+      ...DEFAULT_FEATURES_URL_STATE,
+      categories: [],
+      mode: 'heat',
+    };
+    expect(roundTrip(state)).toEqual(state);
   });
 
   it('view defaults to globe; only an explicit flat is flat', () => {
