@@ -22,6 +22,7 @@
 //   mode      heat | markers
 //   op        heat-map opacity, 0.1..1
 //   missions  1 = show the CLPS mission overlay
+//   view      globe | flat (globe is the default, so it is omitted)
 //   cellid    selected grid cell id, e.g. lat5/lon-25
 //   feat      selected feature Gazetteer id (number)
 import { EMPTY_FEATURE_FILTERS, type FeatureFilters } from './engine';
@@ -32,6 +33,8 @@ export const CELL_DEGREES: CellDeg[] = [2.5, 5, 10];
 export const DEFAULT_CELL_DEG: CellDeg = 5;
 
 export type FeaturesMapMode = 'heat' | 'markers';
+
+export type FeaturesView = 'globe' | 'flat';
 
 export interface NearPoint {
   lat: number;
@@ -55,6 +58,7 @@ export interface FeaturesUrlState {
   mode: FeaturesMapMode;
   opacity: number;
   showMissions: boolean;
+  view: FeaturesView;
   selectedCellId: string | null;
   selectedFeatureId: number | null;
 }
@@ -75,6 +79,7 @@ export const DEFAULT_FEATURES_URL_STATE: FeaturesUrlState = {
   mode: 'heat',
   opacity: 0.75,
   showMissions: false,
+  view: 'globe',
   selectedCellId: null,
   selectedFeatureId: null,
 };
@@ -149,6 +154,10 @@ export function parseFeaturesParams(params: URLSearchParams): FeaturesUrlState {
 
   const modeRaw = params.get('mode');
   const mode: FeaturesMapMode = modeRaw === 'markers' ? 'markers' : 'heat';
+  // Defensive like mode: only an explicit 'flat' is flat; anything else
+  // (absent, invalid, 'globe') is the globe default.
+  const viewRaw = params.get('view');
+  const view: FeaturesView = viewRaw === 'flat' ? 'flat' : 'globe';
   const opacityRaw = parseNumber(params.get('op'));
   const opacity =
     opacityRaw === null ? DEFAULT_FEATURES_URL_STATE.opacity : Math.min(1, Math.max(0.1, opacityRaw));
@@ -173,6 +182,7 @@ export function parseFeaturesParams(params: URLSearchParams): FeaturesUrlState {
     mode,
     opacity,
     showMissions: params.get('missions') === '1',
+    view,
     selectedCellId: params.get('cellid') ?? null,
     selectedFeatureId,
   };
@@ -203,6 +213,7 @@ export function serializeFeaturesState(state: FeaturesUrlState): URLSearchParams
     next.set('op', String(state.opacity));
   }
   if (state.showMissions) next.set('missions', '1');
+  if (state.view !== 'globe') next.set('view', state.view);
   if (state.selectedCellId) next.set('cellid', state.selectedCellId);
   if (state.selectedFeatureId !== null) next.set('feat', String(state.selectedFeatureId));
   return next;

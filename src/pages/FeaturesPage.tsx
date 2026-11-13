@@ -34,8 +34,13 @@ import {
   type FeaturesUrlState,
 } from '../lib/features/urlState';
 import { getMissionById, hasMapPosition, missions } from '../lib/missions';
+import { useMotionPrefs } from '../lib/motionPrefs';
+import { hasWebGL } from '../lib/webgl';
 
 const CategoryChart = lazy(() => import('../components/features/CategoryChart'));
+// Lazy like NavigatorScene3D: the globe's three.js code must never enter
+// this route's first-load chunk — it loads only when the globe renders.
+const FeaturesGlobe = lazy(() => import('../components/features/FeaturesGlobe'));
 
 const MARKER_CAP = 500;
 const ROW_CAP = 100;
@@ -90,6 +95,15 @@ function activeFilterSummary(state: FeaturesUrlState): string[] {
 export default function FeaturesPage() {
   const [params, setParams] = useSearchParams();
   const state = useMemo(() => parseFeaturesParams(params), [params]);
+  const { reduced } = useMotionPrefs();
+  const [webgl] = useState(() => hasWebGL());
+  // Globe is the default view, but only where it can actually render.
+  const showGlobe = state.view === 'globe' && webgl && !reduced;
+  const globeDisabled = !webgl || reduced;
+  // The toggle must report the view actually on screen: when the globe
+  // is disabled the flat map shows even with ?view=globe, so pressed
+  // state follows the effective view, not the requested one.
+  const effectiveView = showGlobe ? 'globe' : 'flat';
 
   const [all, setAll] = useState<LunarFeatureRecord[] | null>(null);
   const [loadState, setLoadState] = useState<LoadState>('loading');
@@ -156,13 +170,14 @@ export default function FeaturesPage() {
       mode: state.mode,
       opacity: state.opacity,
       showMissions: state.showMissions,
+      view: state.view,
     };
     const next = serializeFeaturesState({ ...DEFAULT_FEATURES_URL_STATE, ...keep });
     const compare = params.get('compare');
     if (compare) next.set('compare', compare);
     setParams(next, { replace: true });
     setSearchDraft('');
-  }, [params, setParams, state.cellDeg, state.mode, state.opacity, state.showMissions]);
+  }, [params, setParams, state.cellDeg, state.mode, state.opacity, state.showMissions, state.view]);
 
   const filters = useMemo(() => featuresStateToFilters(state), [state]);
   const filtered = useMemo(
@@ -497,33 +512,64 @@ export default function FeaturesPage() {
             )}
 
           <div className="min-w-0">
-            <p className="mb-2 text-sm text-slate-300" role="status">
-              Showing{' '}
-              <span className="font-semibold tabular-nums text-slate-100">
-                {filtered.length.toLocaleString('en-US')}
-              </span>{' '}
-              of{' '}
-              <span className="tabular-nums">{all.length.toLocaleString('en-US')}</span>{' '}
-              features
-              {summary.length > 0 && (
-                <>
-                  {' · '}
-                  <span className="text-slate-400">{summary.join(' · ')}</span>
-                </>
-              )}
-              {hasActiveFilters(state) && (
-                <>
-                  {' '}
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm text-slate-300" role="status">
+                Showing{' '}
+                <span className="font-semibold tabular-nums text-slate-100">
+                  {filtered.length.toLocaleString('en-US')}
+                </span>{' '}
+                of{' '}
+                <span className="tabular-nums">{all.length.toLocaleString('en-US')}</span>{' '}
+                features
+                {summary.length > 0 && (
+                  <>
+                    {' · '}
+                    <span className="text-slate-400">{summary.join(' · ')}</span>
+                  </>
+                )}
+                {hasActiveFilters(state) && (
+                  <>
+                    {' '}
+                    <button
+                      type="button"
+                      onClick={resetFilters}
+                      className="text-accent underline"
+                    >
+                      Reset
+                    </button>
+                  </>
+                )}
+              </p>
+              <div
+                className="flex overflow-hidden rounded-md border border-space-700 text-sm"
+                role="group"
+                aria-label="Map view"
+              >
+                {(['globe', 'flat'] as const).map((v) => (
                   <button
+                    key={v}
                     type="button"
-                    onClick={resetFilters}
-                    className="text-accent underline"
+                    aria-pressed={effectiveView === v}
+                    disabled={v === 'globe' && globeDisabled}
+                    title={
+                      v === 'globe' && globeDisabled
+                        ? !webgl
+                          ? '3D unavailable in this browser. Showing the flat map'
+                          : 'Reduced motion is on. Showing the flat map'
+                        : undefined
+                    }
+                    onClick={() => update({ view: v })}
+                    className={`min-h-[44px] px-4 ${
+                      effectiveView === v
+                        ? 'bg-accent-dim text-white'
+                        : 'text-slate-300 hover:bg-space-900'
+                    } ${v === 'globe' && globeDisabled ? 'cursor-not-allowed opacity-50' : ''}`}
                   >
-                    Reset
+                    {v === 'globe' ? '3D Globe' : 'Flat Map'}
                   </button>
-                </>
-              )}
-            </p>
+                ))}
+              </div>
+            </div>
 
             {filtered.length === 0 ? (
               <div
@@ -545,30 +591,69 @@ export default function FeaturesPage() {
               </div>
             ) : (
               <>
-                <FeaturesMap
-                  cells={grid}
-                  maxDensity={maxDensity}
-                  opacity={state.opacity}
-                  mode={state.mode}
-                  markers={markerFeatures}
-                  markersBlocked={markersBlocked}
-                  blockedCount={filtered.length}
-                  cellDeg={state.cellDeg}
-                  selectedCellId={state.selectedCellId}
-                  selectedFeatureId={state.selectedFeatureId}
-                  showMissions={state.showMissions}
-                  missionsWithCoords={missionsWithCoords}
-                  pickingNearPoint={pickingNearPoint}
-                  nearPoint={state.nearPoint}
-                  onCellClick={onCellClick}
-                  onFeatureClick={onFeatureClick}
-                  onMissionClick={(m) => onMissionClick(m.id)}
-                  onMapClick={onMapClick}
-                  onZoomChange={setZoom}
-                />
+                {showGlobe ? (
+                  <Suspense
+                    fallback={
+                      <div role="status" aria-live="polite">
+                        <div className="h-[50vh] min-h-[320px] animate-pulse rounded-lg border border-space-800 bg-space-900" />
+                        <p className="mt-3 text-sm text-slate-400">Loading 3D globe…</p>
+                      </div>
+                    }
+                  >
+                    <FeaturesGlobe
+                      cells={grid}
+                      maxDensity={maxDensity}
+                      opacity={state.opacity}
+                      mode={state.mode}
+                      markers={markerFeatures}
+                      markersBlocked={markersBlocked}
+                      blockedCount={filtered.length}
+                      cellDeg={state.cellDeg}
+                      selectedCellId={state.selectedCellId}
+                      selectedFeatureId={state.selectedFeatureId}
+                      showMissions={state.showMissions}
+                      missionsWithCoords={missionsWithCoords}
+                      pickingNearPoint={pickingNearPoint}
+                      nearPoint={state.nearPoint}
+                      zoom={zoom}
+                      onCellClick={onCellClick}
+                      onFeatureClick={onFeatureClick}
+                      onMissionClick={(m) => onMissionClick(m.id)}
+                      onMapClick={onMapClick}
+                      onZoomChange={setZoom}
+                    />
+                  </Suspense>
+                ) : (
+                  <FeaturesMap
+                    cells={grid}
+                    maxDensity={maxDensity}
+                    opacity={state.opacity}
+                    mode={state.mode}
+                    markers={markerFeatures}
+                    markersBlocked={markersBlocked}
+                    blockedCount={filtered.length}
+                    cellDeg={state.cellDeg}
+                    selectedCellId={state.selectedCellId}
+                    selectedFeatureId={state.selectedFeatureId}
+                    showMissions={state.showMissions}
+                    missionsWithCoords={missionsWithCoords}
+                    pickingNearPoint={pickingNearPoint}
+                    nearPoint={state.nearPoint}
+                    onCellClick={onCellClick}
+                    onFeatureClick={onFeatureClick}
+                    onMissionClick={(m) => onMissionClick(m.id)}
+                    onMapClick={onMapClick}
+                    onZoomChange={setZoom}
+                  />
+                )}
                 <p className="mt-2 text-xs text-slate-400">
-                  Drag to pan · scroll to zoom · click a cell for its features
-                  {state.mode === 'markers' ? ' · click a marker for details' : ''}.
+                  {showGlobe
+                    ? `Drag to rotate · scroll to zoom · click a cell for its features${
+                        state.mode === 'markers' ? ' · click a marker for details' : ''
+                      }`
+                    : `Drag to pan · scroll to zoom · click a cell for its features${
+                        state.mode === 'markers' ? ' · click a marker for details' : ''
+                      }.`}
                 </p>
 
                 {state.mode === 'heat' && legendBuckets.length > 0 && (
@@ -658,6 +743,10 @@ export default function FeaturesPage() {
                 abundance — naming and survey coverage can bias it.
               </p>
               <p>Coordinates are approximate feature centres.</p>
+              <p>
+                3D globe: cells are drawn on the canvas and are not keyboard-focusable — use
+                the filters and the feature list to reach every feature.
+              </p>
               <p>
                 Lacus = “lake” in Latin: small dark plains, no liquid water. Source:{' '}
                 <Link to="/library" className="text-accent underline">

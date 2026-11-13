@@ -28,7 +28,7 @@ describe('parseFeaturesParams', () => {
       new URLSearchParams(
         'cat=Crater,Maria&type=AA,SF&q=tycho&side=near&latmin=-90&latmax=0&pole=1' +
           '&mind=10&maxd=200&near=9.62,-20.08,100&mission=prime-1&cell=2.5' +
-          '&mode=markers&op=0.5&missions=1&cellid=lat5%2Flon-25&feat=1296',
+          '&mode=markers&op=0.5&missions=1&view=flat&cellid=lat5%2Flon-25&feat=1296',
       ),
     );
     expect(s.categories).toEqual(['Crater', 'Maria']);
@@ -46,6 +46,7 @@ describe('parseFeaturesParams', () => {
     expect(s.mode).toBe('markers');
     expect(s.opacity).toBe(0.5);
     expect(s.showMissions).toBe(true);
+    expect(s.view).toBe('flat');
     expect(s.selectedCellId).toBe('lat5/lon-25');
     expect(s.selectedFeatureId).toBe(1296);
   });
@@ -54,7 +55,7 @@ describe('parseFeaturesParams', () => {
     const s = parseFeaturesParams(
       new URLSearchParams(
         'cat=Crater,Bogus&type=AA,xyz&side=left&latmin=200&latmax=-200' +
-          '&mind=-5&maxd=abc&near=1,2&cell=7&mode=dots&op=9&feat=-3',
+          '&mind=-5&maxd=abc&near=1,2&cell=7&mode=dots&op=9&view=bogus&feat=-3',
       ),
     );
     expect(s.categories).toEqual(['Crater']);
@@ -68,7 +69,27 @@ describe('parseFeaturesParams', () => {
     expect(s.cellDeg).toBe(5);
     expect(s.mode).toBe('heat');
     expect(s.opacity).toBe(1);
+    expect(s.view).toBe('globe');
     expect(s.selectedFeatureId).toBeNull();
+  });
+
+  it('view defaults to globe; only an explicit flat is flat', () => {
+    expect(parseFeaturesParams(new URLSearchParams('')).view).toBe('globe');
+    expect(parseFeaturesParams(new URLSearchParams('view=globe')).view).toBe('globe');
+    expect(parseFeaturesParams(new URLSearchParams('view=flat')).view).toBe('flat');
+    expect(parseFeaturesParams(new URLSearchParams('view=3D')).view).toBe('globe');
+  });
+
+  it('serialize omits view when globe (the default) and keeps flat', () => {
+    expect(
+      serializeFeaturesState({ ...DEFAULT_FEATURES_URL_STATE, view: 'globe' }).toString(),
+    ).toBe('');
+    expect(
+      serializeFeaturesState({ ...DEFAULT_FEATURES_URL_STATE, view: 'flat' }).toString(),
+    ).toBe('view=flat');
+    expect(
+      roundTrip({ ...DEFAULT_FEATURES_URL_STATE, view: 'flat' }).view,
+    ).toBe('flat');
   });
 
   it('an inverted latitude or diameter range is treated as unset', () => {
