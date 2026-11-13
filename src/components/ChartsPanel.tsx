@@ -28,6 +28,10 @@ function Chart({
   color: string;
 }) {
   const narrow = useNarrowLabels();
+  // Long category names (provider names up to 17 chars) collide when drawn
+  // horizontally in a half-width chart — tilt them at any width, not only
+  // on phones. Short labels (statuses) stay horizontal.
+  const tilted = narrow || data.some((d) => d.name.length > 10);
   return (
     <figure className="rounded-lg border border-space-800 bg-space-900 p-4 shadow-panel">
       <figcaption className="mb-2 text-sm font-medium text-slate-300">{title}</figcaption>
@@ -35,15 +39,15 @@ function Chart({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
-            margin={{ top: 8, right: 8, bottom: narrow ? 4 : 8, left: narrow ? 64 : 8 }}
+            margin={{ top: 8, right: 8, bottom: tilted ? 4 : 8, left: tilted ? 64 : 8 }}
           >
             <XAxis
               dataKey="name"
               interval={0}
-              angle={narrow ? -40 : undefined}
-              textAnchor={narrow ? 'end' : undefined}
-              height={narrow ? 68 : 30}
-              tick={{ fill: '#94a3b8', fontSize: narrow ? 10 : 11 }}
+              angle={tilted ? -40 : undefined}
+              textAnchor={tilted ? 'end' : undefined}
+              height={tilted ? 68 : 30}
+              tick={{ fill: '#94a3b8', fontSize: tilted ? 10 : 11 }}
             />
             <YAxis allowDecimals={false} tick={{ fill: '#94a3b8', fontSize: 11 }} width={28} />
             <Tooltip
