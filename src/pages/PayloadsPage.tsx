@@ -23,7 +23,7 @@ export default function PayloadsPage() {
       <div className="mb-5">
         <h1 className="mb-2 text-2xl font-bold">Payload explorer</h1>
         <p className="mb-2 text-sm text-slate-400">
-          <CountUp value={GROUPS.length} /> payloads across <CountUp value={missions.length} /> CLPS
+          <CountUp value={GROUPS.length} /> distinct payloads across <CountUp value={missions.length} /> CLPS
           deliveries. Payload names are shown
           exactly as their sources spell them, so variants stay separate. CT-4, CS-8 and CX-2 have no
           payload details published yet.
