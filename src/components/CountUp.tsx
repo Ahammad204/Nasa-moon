@@ -36,6 +36,17 @@ export default function CountUp({ value, className, whenVisible = false }: Props
       raf = requestAnimationFrame(tick);
     };
 
+    // A jump scroll can skip past the element without IntersectionObserver
+    // ever reporting it — it would then sit at 0 forever. An element
+    // already fully above the viewport counts as seen too.
+    const checkPassed = () => {
+      if (el.getBoundingClientRect().bottom < 0) {
+        observer?.disconnect();
+        window.removeEventListener('scroll', checkPassed, true);
+        run();
+      }
+    };
+
     if (animated.current) {
       run();
     } else if (whenVisible) {
@@ -44,12 +55,15 @@ export default function CountUp({ value, className, whenVisible = false }: Props
         (entries) => {
           if (entries.some((e) => e.isIntersecting)) {
             observer?.disconnect();
+            window.removeEventListener('scroll', checkPassed, true);
             run();
           }
         },
         { threshold: 0.4 }
       );
       observer.observe(el);
+      checkPassed();
+      window.addEventListener('scroll', checkPassed, true);
     } else {
       run();
     }
@@ -57,6 +71,7 @@ export default function CountUp({ value, className, whenVisible = false }: Props
     return () => {
       cancelAnimationFrame(raf);
       observer?.disconnect();
+      window.removeEventListener('scroll', checkPassed, true);
     };
   }, [value, whenVisible]);
 
