@@ -166,7 +166,7 @@ export default function SouthPolePage() {
       const outward = { x: x - CX, y: y - CY };
       const len = Math.hypot(outward.x, outward.y) || 1;
       const halfW = (p.label.length * 7.2) / 2;
-      let lx = x + (outward.x / len) * 14;
+      const lx = x + (outward.x / len) * 14;
       let ly = y + (outward.y / len) * 14;
       const step = ly > CY ? -18 : 18;
       let bumps = 0;
