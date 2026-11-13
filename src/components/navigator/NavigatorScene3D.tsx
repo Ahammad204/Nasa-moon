@@ -19,7 +19,7 @@ import { latLonToVector3 } from '../../three/primitives/Marker3D';
 /**
  * Sun & Earth Navigator — 3D scene (Three.js / R3F, lazy-loaded chunk).
  *
- * The Moon is the app's own NASA model (public/models/moon.glb) with the
+ * The Moon is the app's own NASA model (public/models/moon-webp-q90.glb) with the
  * app's established lat/lon → Vector3 convention (Marker3D). The directional
  * light sits along the TRUE Sun direction in the Moon body-fixed frame, so
  * the terminator moves correctly when the time changes; the Sun and Earth
@@ -28,7 +28,7 @@ import { latLonToVector3 } from '../../three/primitives/Marker3D';
  *
  * Sun model: NASA Solar System Exploration "Sun" glTF
  * (solarsystem.nasa.gov/gltf_embed/2352/, public domain), self-hosted at
- * public/models/sun.glb. If that file is missing or fails to load, an
+ * public/models/sun-webp-q90.glb. If that file is missing or fails to load, an
  * emissive sphere + glow sprite takes its place — the scene never depends
  * on a runtime network fetch.
  *
@@ -37,7 +37,7 @@ import { latLonToVector3 } from '../../three/primitives/Marker3D';
  */
 
 const MOON_RADIUS = 1.6;
-const SUN_MODEL_URL = '/models/sun.glb';
+const SUN_MODEL_URL = '/models/sun-webp-q90.glb';
 
 class GltfErrorBoundary extends Component<
   { fallback: ReactNode; children: ReactNode },

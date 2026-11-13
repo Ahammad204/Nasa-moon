@@ -8,7 +8,7 @@ import MoonMesh from './MoonMesh';
 // domain), self-hosted so runtime makes no external requests. Geometry bounds
 // are ±500 units — scaled to `radius`. The procedural MoonMesh stays as the
 // Suspense fallback (load / no-WebGL parity): no blank frames while fetching.
-const MODEL_URL = '/models/moon.glb';
+const MODEL_URL = '/models/moon-webp-q90.glb';
 const MODEL_R = 500;
 
 function TexturedMoon({
