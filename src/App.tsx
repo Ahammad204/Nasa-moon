@@ -16,6 +16,8 @@ const MapPage = lazy(() => import('./pages/MapPage'));
 const NavigatorPage = lazy(() => import('./pages/NavigatorPage'));
 // Lazy: the South Pole page computes a 29.5-day window for every site.
 const SouthPolePage = lazy(() => import('./pages/SouthPolePage'));
+// Lazy: the Lunar Feature Explorer + its 3.3 MB Gazetteer dataset.
+const FeaturesPage = lazy(() => import('./pages/FeaturesPage'));
 // Lazy: the Research Library is a text-heavy page, kept out of first paint.
 const LibraryPage = lazy(() => import('./pages/LibraryPage'));
 // Lazy: the Moon Lab (weight calculator + constants).
@@ -36,6 +38,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
           <Route path="/missions" element={<ListPage />} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/features" element={<FeaturesPage />} />
             <Route path="/mission/:id" element={<MissionDetailPage />} />
             <Route path="/navigator" element={<NavigatorPage />} />
             <Route path="/south-pole" element={<SouthPolePage />} />

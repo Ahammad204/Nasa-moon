@@ -16,6 +16,7 @@ const NAV = [
   { to: '/', label: 'Home' },
   { to: '/missions', label: 'Missions' },
   { to: '/map', label: 'Map' },
+  { to: '/features', label: 'Features' },
   { to: '/navigator', label: 'Navigator' },
   { to: '/south-pole', label: 'South Pole' },
   { to: '/why-south-pole', label: 'Why South Pole' },

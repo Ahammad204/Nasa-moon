@@ -454,7 +454,8 @@ export default function NavigatorPage() {
                 sub-Earth point from its libration (Meeus ch. 53); sub-solar point by
                 Meeus ch. 53&apos;s construction. Site coordinates come from the mission
                 dataset and the south-pole sites dataset (NASA Artemis III candidate
-                regions, NASA/USGS Gazetteer — approximate feature centres).
+                regions, NASA/USGS Gazetteer — approximate feature centres); a custom
+                point&apos;s coordinates come from the URL (?lat=&amp;lon=).
               </p>
               <p>
                 Limits: geometric ideal horizon, terrain obstruction is NOT included, so

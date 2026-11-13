@@ -44,6 +44,16 @@ as a static React app over verified NASA/USGS data.
 - **Moon Interior** at `/moon-interior`: tappable SVG cutaway of the Moon's crust, mantle and iron core, using NASA's current values
 - **Lunar Atlas** at `/atlas`: Copernicus, South Pole-Aitken Basin and Tycho, with USGS Gazetteer / NASA numbers and a "Fly to" map link plus an LROC QuickMap link per feature
 - **Composition Explorer** at `/composition`: highlands vs maria, regolith vs megaregolith, and Apollo sample cards linking out to Washington University
+- **Lunar Feature Explorer** at `/features`: all 9,087 named USGS Gazetteer Moon features
+  as a density heat map (features per 1000 km² of true spherical cell area, 2.5°/5°/10°
+  cells) on the NASA LRO WAC basemap, with filters (category, raw Gazetteer type, log-scale
+  diameter, name search, near/far side, latitude, south pole, near-a-point), individual
+  markers, a CLPS mission overlay, a per-category chart, and a detail card per feature
+  with a Gazetteer link and a Sun & Earth Navigator link — every filter and selection
+  lives in the query string, so views are shareable. The 3.3 MB dataset
+  (`src/data/lunar-features.json`, built by `scripts/build-features.mjs` from the official
+  USGS Gazetteer archive) loads only on this route. The heat map shows density of *named*
+  features, not geological abundance.
 - **Shareable URLs**: search, filters, compare set and map selection all live in the query string
 
 ## Setup
@@ -90,6 +100,11 @@ and `lastVerified`; unknown values are `null`, never guesses. Full source table:
 [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md); open gaps and source conflicts:
 [`docs/DATA_GAPS.md`](docs/DATA_GAPS.md); schema: [`docs/DATA_SCHEMA.md`](docs/DATA_SCHEMA.md);
 Sun & Earth method: [`docs/SUN_EARTH_METHOD.md`](docs/SUN_EARTH_METHOD.md).
+
+- **Named lunar features**: 9,087 records in `src/data/lunar-features.json`, built by
+  `scripts/build-features.mjs` from the official USGS Gazetteer of Planetary Nomenclature
+  Moon archive (MOON_nomenclature_center_pts.zip) — coordinates are approximate feature
+  centres, unknown diameters/origins are `null`, never estimated
 
 - **South-pole sites**: 14 sites in `src/data/sites.json` — the 13 NASA Artemis III
   candidate regions (Aug 2022) plus Shackleton crater. Only 3 have verified coordinates

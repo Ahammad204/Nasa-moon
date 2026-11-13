@@ -20,6 +20,13 @@ interface Props {
   children?: ReactNode;
   /** Centre the flat map on a lat/lon (e.g. an Atlas "Fly to" link). */
   focus?: { lat: number; lon: number; label: string };
+  /**
+   * Render vector layers on a canvas instead of SVG. For dense layers
+   * (thousands of grid cells) this is far faster; the trade-off is that
+   * canvas paths are not keyboard-focusable, so callers that need
+   * keyboard-operable cells must keep the SVG renderer.
+   */
+  preferCanvas?: boolean;
 }
 
 // Centres the map on the focus point once, at a zoom where a crater is
@@ -86,7 +93,7 @@ function FitToContainer({
 
 // Hides the Moon tile source, CRS and fallback (D-012): Trek WMTS tiles on
 // L.CRS.EPSG4326 (zoom 0-8), static WAC overlay on L.CRS.Simple when tiles fail.
-export default function MoonMap({ useFallback = false, children, focus }: Props) {
+export default function MoonMap({ useFallback = false, children, focus, preferCanvas = false }: Props) {
   return (
     <div className="h-full w-full" role="application" aria-label="Moon map">
       {useFallback ? (
@@ -113,6 +120,7 @@ export default function MoonMap({ useFallback = false, children, focus }: Props)
           maxZoom={8}
           maxBounds={L.latLngBounds([-90, -180], [90, 180])}
           maxBoundsViscosity={1}
+          renderer={preferCanvas ? L.canvas() : undefined}
           className="h-full w-full"
         >
           <TileLayer url={TREK_URL} attribution={ATTRIBUTION} noWrap minZoom={0} maxZoom={8} />

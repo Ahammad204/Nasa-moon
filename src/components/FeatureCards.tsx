@@ -14,6 +14,11 @@ const FEATURES = [
     body: 'See landing sites on an interactive NASA-tile Moon map.',
   },
   {
+    to: '/features',
+    title: 'Features',
+    body: 'Every named lunar feature as a density heat map — filter, search, and open any feature in the Navigator.',
+  },
+  {
     to: '/compare',
     title: 'Compare',
     body: 'Put 2-3 missions side by side and spot the differences.',
