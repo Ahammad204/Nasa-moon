@@ -1,10 +1,30 @@
-import { useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import CountUp from '../components/CountUp';
-import PayloadGraphPanel from '../components/PayloadGraphPanel';
 import { missions } from '../lib/missions';
 import { groupPayloads } from '../lib/payloads';
 import { useSceneFlags } from '../three/sceneStore';
+
+// Lazy: the graph pulls in three.js + fiber (~970 KB). PayloadsPage itself is
+// an eager route, so a static import here made Vite modulepreload the whole
+// 3D bundle on every first load (including the homepage). The panel loads
+// on demand now; the list below renders immediately either way.
+const PayloadGraphPanel = lazy(() => import('../components/PayloadGraphPanel'));
+
+function GraphFallback() {
+  return (
+    <section
+      aria-label="Payload relationship graph"
+      className="mb-6 overflow-hidden rounded-lg border border-space-800 bg-space-950 shadow-panel"
+    >
+      <div className="border-b border-space-800 px-4 py-3">
+        <h2 className="font-semibold text-slate-100">Relationship graph</h2>
+        <p className="mt-0.5 text-xs text-slate-400">Loading relationship graph…</p>
+      </div>
+      <div className="h-[380px] sm:h-[440px]" aria-hidden="true" />
+    </section>
+  );
+}
 
 const GROUPS = groupPayloads(missions);
 
@@ -33,7 +53,9 @@ export default function PayloadsPage() {
           node to open that mission, or a payload node to jump to its card below.
         </p>
       </div>
-      <PayloadGraphPanel />
+      <Suspense fallback={<GraphFallback />}>
+        <PayloadGraphPanel />
+      </Suspense>
       <div className="space-y-4">
         {GROUPS.map((g) => (
           <article
