@@ -87,7 +87,9 @@ export default function MoonInteriorPage() {
               </g>
             );
           })}
-          <text x="320" y="24" textAnchor="middle" fill="#94a3b8" fontSize="14">
+          {/* Label sits above the rim: the outer circle tops out at y=20,
+              so y=24 put the text across the rim. y=14 clears it. */}
+          <text x="320" y="14" textAnchor="middle" fill="#94a3b8" fontSize="14">
             Surface — radius 1,737.4 km
           </text>
         </svg>
