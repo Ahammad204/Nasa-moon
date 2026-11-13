@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useMotionPrefs } from '../lib/motionPrefs';
 import { hasWebGL } from '../lib/webgl';
@@ -60,6 +60,41 @@ export default function AppShell() {
       document.removeEventListener('keydown', onKey);
     };
   }, [menuOpen]);
+
+  // Desktop nav is one scrollable row (14 links never fit beside the brand):
+  // a normal mouse wheel over the nav scrolls it sideways instead of the
+  // page, and the ‹ › buttons do the same for mice without a horizontal
+  // wheel. Arrows show only while the nav actually overflows; at either
+  // end the wheel falls through to normal page scrolling.
+  const navRef = useRef<HTMLElement | null>(null);
+  const [navArrows, setNavArrows] = useState({ left: false, right: false });
+  useEffect(() => {
+    const el = navRef.current;
+    if (!el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      setNavArrows({ left: el.scrollLeft > 1, right: el.scrollLeft < max - 1 });
+    };
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      const max = el.scrollWidth - el.clientWidth;
+      if (max <= 1) return;
+      if ((e.deltaY < 0 && el.scrollLeft <= 0) || (e.deltaY > 0 && el.scrollLeft >= max)) return;
+      e.preventDefault();
+      el.scrollLeft += e.deltaY;
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    el.addEventListener('wheel', onWheel, { passive: false });
+    window.addEventListener('resize', update);
+    return () => {
+      el.removeEventListener('scroll', update);
+      el.removeEventListener('wheel', onWheel);
+      window.removeEventListener('resize', update);
+    };
+  }, []);
+  const scrollNav = (dir: 1 | -1) =>
+    navRef.current?.scrollBy({ left: dir * 240, behavior: reduced ? 'auto' : 'smooth' });
 
   const routeKey: RouteKey =
     pathname === '/'
@@ -126,7 +161,19 @@ export default function AppShell() {
           >
             CLPS Lunar Mission Browser
           </NavLink>
-          <nav className="ml-auto hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [mask-image:linear-gradient(to_right,black_92%,transparent)] [scrollbar-width:none] md:flex [&::-webkit-scrollbar]:hidden">
+          <button
+            type="button"
+            aria-label="Scroll navigation left"
+            onClick={() => scrollNav(-1)}
+            disabled={!navArrows.left}
+            className="ml-auto hidden min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md border border-space-700 text-lg text-slate-200 disabled:opacity-30 md:flex"
+          >
+            ‹
+          </button>
+          <nav
+            ref={navRef}
+            className="ml-auto hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [mask-image:linear-gradient(to_right,black_92%,transparent)] [scrollbar-width:none] md:flex [&::-webkit-scrollbar]:hidden"
+          >
             {NAV.map(({ to, label }) => (
               <NavLink
                 key={to}
@@ -144,6 +191,15 @@ export default function AppShell() {
               </NavLink>
             ))}
           </nav>
+          <button
+            type="button"
+            aria-label="Scroll navigation right"
+            onClick={() => scrollNav(1)}
+            disabled={!navArrows.right}
+            className="hidden min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md border border-space-700 text-lg text-slate-200 disabled:opacity-30 md:flex"
+          >
+            ›
+          </button>
           <button
             type="button"
             data-mobile-menu
