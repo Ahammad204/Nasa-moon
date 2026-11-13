@@ -423,7 +423,9 @@ export default function FeaturesPage() {
       {loadState === 'loading' && (
         <div role="status" aria-live="polite" aria-label="Loading named lunar features">
           <div className="h-[50vh] min-h-[320px] animate-pulse rounded-lg border border-space-800 bg-space-900" />
-          <p className="mt-3 text-sm text-slate-400">Loading named lunar features…</p>
+          <p className="mt-3 text-sm text-slate-400">
+            Loading named lunar features… 9,087 features
+          </p>
         </div>
       )}
 

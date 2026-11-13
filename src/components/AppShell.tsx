@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation, useNavigate, useSearchParams } from 'reac
 import { useMotionPrefs } from '../lib/motionPrefs';
 import { hasWebGL } from '../lib/webgl';
 import CompareTray from './CompareTray';
+import Loading from './Loading';
 import PageTransition from './PageTransition';
 import ReduceMotionToggle from './ReduceMotionToggle';
 import StarfieldBackground from './StarfieldBackground';
@@ -196,7 +197,13 @@ export default function AppShell() {
 
       <main className="relative z-10 mx-auto w-full max-w-6xl flex-1 px-4 py-6">
         <PageTransition>
-          <Outlet />
+          {/* The shell (header/nav/footer) stays up while a lazy page chunk
+          loads — previously the outer Suspense blanked the whole page to a
+          bare "Loading…". The fallback below keeps the page shape + a label
+          naming what is loading. */}
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
         </PageTransition>
       </main>
 

@@ -53,7 +53,7 @@ export default function ListPage() {
         value={filters}
         onChange={(f: Filters) => updateParams(filtersToParams(f))}
       />
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading label="Loading charts…" />}>
         <ChartsPanel missions={filtered} />
       </Suspense>
       <p className="mb-3 text-sm text-slate-400" role="status">

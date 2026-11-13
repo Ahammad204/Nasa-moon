@@ -52,11 +52,12 @@ function pickNextEvent(
 function SceneSkeleton() {
   return (
     <div
-      className="flex h-full items-center justify-center text-sm text-slate-400"
+      className="flex h-full flex-col items-center justify-center gap-4 bg-space-950"
       role="status"
       aria-live="polite"
     >
-      Loading 3D scene…
+      <div className="h-24 w-24 animate-pulse rounded-full bg-space-800" aria-hidden="true" />
+      <p className="text-sm text-slate-400">Loading 3D scene…</p>
     </div>
   );
 }
