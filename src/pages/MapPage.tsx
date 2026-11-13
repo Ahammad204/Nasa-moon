@@ -53,8 +53,14 @@ export default function MapPage() {
   // Atlas "Fly to" deep link: /map?lat=..&lon=..&name=.. — centres the flat
   // map on the feature. Invalid values are ignored (plain whole-Moon view).
   const focus = useMemo(() => {
-    const lat = Number(params.get('lat'));
-    const lon = Number(params.get('lon'));
+    // Missing params are absent, not zero: Number(null) is 0, so a plain
+    // /map used to read as a focus on (0°, 0°) — a bogus "Feature" banner
+    // that also forced the flat map. Require both params present.
+    const latRaw = params.get('lat');
+    const lonRaw = params.get('lon');
+    if (latRaw === null || lonRaw === null) return null;
+    const lat = Number(latRaw);
+    const lon = Number(lonRaw);
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
     if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
     return { lat, lon, label: params.get('name') ?? 'Feature' };
