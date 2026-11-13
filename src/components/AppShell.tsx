@@ -119,21 +119,21 @@ export default function AppShell() {
         <StarfieldBackground />
       )}
       <header className="pointer-events-auto sticky top-0 z-40 border-b border-space-800 bg-space-950/70 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center gap-x-6 px-4 py-3">
           <NavLink
             to="/"
-            className="flex min-h-[44px] items-center text-lg font-semibold tracking-tight text-slate-100"
+            className="flex min-h-[44px] shrink-0 items-center text-lg font-semibold tracking-tight text-slate-100"
           >
             CLPS Lunar Mission Browser
           </NavLink>
-          <nav className="ml-auto hidden flex-wrap gap-1 md:flex">
+          <nav className="ml-auto hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto whitespace-nowrap [mask-image:linear-gradient(to_right,black_92%,transparent)] [scrollbar-width:none] md:flex [&::-webkit-scrollbar]:hidden">
             {NAV.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={{ pathname: to, search }}
                 end={to === '/' || to === '/missions'}
                 className={({ isActive }) =>
-                  `flex min-h-[44px] items-center rounded-md px-3 text-sm transition-colors duration-200 ${
+                  `flex min-h-[44px] shrink-0 items-center rounded-md px-3 text-sm transition-colors duration-200 ${
                     isActive
                       ? 'bg-space-800 text-white shadow-glow'
                       : 'text-slate-300 hover:bg-space-900'
@@ -147,7 +147,7 @@ export default function AppShell() {
           <button
             type="button"
             data-mobile-menu
-            className="ml-auto flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border border-space-700 px-2 text-slate-200 md:hidden"
+            className="ml-auto flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-md border border-space-700 px-2 text-slate-200 md:hidden"
             aria-expanded={menuOpen}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             onClick={() => setMenuOpen((o) => !o)}
