@@ -27,3 +27,39 @@ This file is the project-level index; the per-record lists in
 - The Sun & Earth model is validated against Meeus, "Astronomical
   Algorithms" Example 53.a and the Apollo 11 landing geometry — see
   `SUN_EARTH_METHOD.md` and `src/lib/astro/astro.test.ts`.
+
+## Lunar Feature Explorer dataset (`src/data/lunar-features.json`)
+
+- **File downloaded:** `MOON_nomenclature_center_pts.zip` (23,845,070 bytes),
+  from <https://asc-planetarynames-data.s3.us-west-2.amazonaws.com/MOON_nomenclature_center_pts.zip>
+  (the current Moon nomenclature shapefile linked from the USGS GIS
+  Downloads page, <https://planetarynames.wr.usgs.gov/GIS_Downloads>).
+  **Downloaded 2026-11-13.** The archive's `.dbf` was last modified
+  2026-11-12 09:04 UTC; it holds 9,087 approved IAU feature names, all
+  "Adopted by IAU".
+- **Build:** `node scripts/build-features.mjs` (no dependencies; parses the
+  ZIP + `.dbf` in plain Node, `--input <local .zip>` reuses a download).
+  Only the `.dbf` attribute table is read — the `.shp` geometry is the
+  same centre point the `.dbf` already carries as `center_lat` /
+  `center_lon`.
+- **Coordinates:** Gazetteer longitude is 0–360° east; the JSON stores
+  east-positive −180…180 (values > 180 shifted by −360). Latitude −90…90.
+  Lat/lon rounded to 4 decimals, diameter to 3.
+- **Counts (2026-11-13 download):** 9,087 total — Crater 1,635; Other
+  7,152; Valley 126; Mountain 114; Maria 59; Plain 1. "Other" is large
+  because 7,064 records are Satellite Features (lettered satellite
+  craters) and 81 are astronaut-named features — neither type is in the
+  spec's category mapping, so per the no-guessing rule they stay "Other"
+  with their raw type kept rather than being reclassified. 4 records have
+  a published diameter of 0 (Planitia Descensus, Mons Agnes, Statio Shiv
+  Shakti, Statio Tianjiang) — stored as `diameterKm: null`.
+- **Size:** 3,297,067 bytes (~3.2 MB). Do NOT statically import it on a
+  route — the UI phase must lazy-load it via dynamic import.
+- **Feature ids:** parsed from the Gazetteer's `link` field
+  (`https://planetarynames.wr.usgs.gov/Feature/<id>`, verified HTTP 200);
+  `featureType` is the raw 2-letter Gazetteer code (`AA` = crater, …),
+  `typeName` the descriptive type string.
+- **Types present in this download:** Crater, Catena, Mare, Lacus, Palus,
+  Sinus, Oceanus, Mons, Promontorium, Dorsum, Rupes, Vallis, Rima,
+  Planitia, Satellite Feature, Astronaut-named features, Albedo Feature,
+  Statio. Fossa, Planum, Lingula and Terra do NOT occur for the Moon.

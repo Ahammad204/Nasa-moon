@@ -16,6 +16,8 @@ HANDOFF.md
 AGENT.md
 tasks/
 plans/
-scripts/
+scripts/*
+# ...except the committed build scripts (reproducible data builds)
+!scripts/build-features.mjs
 
 .vercel
