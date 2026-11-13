@@ -37,6 +37,12 @@ export default function AtlasPage() {
           const gazetteer = feature.gazetteerFeatureId
             ? getSourceById('usgs-gazetteer')
             : undefined;
+          // The feature's own Gazetteer record button below IS its Gazetteer
+          // source link — showing the generic "USGS Gazetteer" pill as well
+          // duplicated the label. Drop the pill when the record button exists.
+          const badgeIds = feature.gazetteerFeatureId
+            ? feature.sourceIds.filter((id) => id !== 'usgs-gazetteer')
+            : feature.sourceIds;
           const flyTo = `/map?lat=${feature.latitude}&lon=${feature.longitude}&name=${encodeURIComponent(feature.name)}`;
           return (
             <article
@@ -67,7 +73,7 @@ export default function AtlasPage() {
               </dl>
               <p className="mt-3 text-sm text-slate-400">{feature.note}</p>
               <div className="mt-3">
-                <SourceBadge ids={feature.sourceIds} />
+                <SourceBadge ids={badgeIds} />
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link
