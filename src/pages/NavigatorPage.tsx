@@ -10,6 +10,7 @@ import SunEarthCards, { type NextEventInfo } from '../components/navigator/SunEa
 import { nextEventFromSamples } from '../components/navigator/eventFromSamples';
 import { fmtUtc } from '../components/navigator/format';
 import {
+  CUSTOM_SITE_ID,
   DAY_LABELS,
   NAVIGATOR_DAYS,
   fromDatetimeLocalValue,
@@ -113,6 +114,9 @@ export default function NavigatorPage() {
 
   // Changing the window or site resets the playhead and pauses.
   const onSiteChange = (id: string) => {
+    // The custom point is defined by ?lat=&lon=, not by the dropdown —
+    // selecting its (display-only) entry changes nothing.
+    if (id === CUSTOM_SITE_ID) return;
     setPlaying(false);
     update({ siteId: id });
   };
@@ -290,6 +294,14 @@ export default function NavigatorPage() {
                 onChange={(e) => onSiteChange(e.target.value)}
                 className="min-h-[44px] w-full rounded-md border border-space-700 bg-space-950 px-3 text-slate-100"
               >
+                {/* A custom ?lat=&lon= point is not in the known-sites
+                    list, so it is shown as its own entry while active;
+                    its label already carries the coordinates. */}
+                {site.id === CUSTOM_SITE_ID && (
+                  <option key={site.id} value={site.id}>
+                    {site.name}
+                  </option>
+                )}
                 {navigatorSiteOptions().map((o) => (
                   <option key={o.id} value={o.id}>
                     {o.name} — {o.siteName} ({o.latitude.toFixed(1)}°, {o.longitude.toFixed(1)}°)

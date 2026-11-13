@@ -8,6 +8,12 @@ import { computableSites } from '../../lib/sites';
  * shareable: ?site=<mission id>&t=<ISO UTC window start>&off=<hours into
  * the window>&days=<7|14|29.5>&disc=<0|1>.
  *
+ * A custom point can be opened directly with ?lat=<deg>&lon=<deg>
+ * (both required, lat -90..90, lon -180..180). A valid lat+lon pair takes
+ * precedence over ?site= when both are given. An invalid or incomplete
+ * pair is ignored entirely and the navigator falls back to ?site= (or the
+ * default site) — it never crashes or shows an error page.
+ *
  * `t` is the window START (UTC); the slider/playhead moves `off` hours into
  * the window, so `current = t + off`. The date-time picker edits `t` (and
  * resets `off` to 0); "Now" sets `t` to the current hour.
@@ -23,6 +29,56 @@ export const DAY_LABELS: Record<NavigatorDays, string> = {
 
 /** Default site: IM-2, Mons Mouton — a south-pole Artemis III candidate. */
 export const DEFAULT_SITE_ID = 'prime-1';
+
+/** Id used for a site defined by ?lat=&lon= (no mission or region data). */
+export const CUSTOM_SITE_ID = 'custom';
+
+/**
+ * Display label for a custom site. Honest and plain on purpose: an
+ * arbitrary point has no mission, provider, or region name, so the label
+ * is just the coordinates — never an invented name.
+ */
+export function customSiteLabel(latitude: number, longitude: number): string {
+  return `Custom site (${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°)`;
+}
+
+/**
+ * Parse a ?lat=&lon= pair from the query string. Returns the custom site
+ * only when BOTH values are present, parse as finite numbers, and are in
+ * range (lat -90..90, lon -180..180). Anything else returns null, so the
+ * caller falls back to the existing ?site= behaviour.
+ */
+export function parseCustomSite(params: URLSearchParams): NavigatorSiteOption | null {
+  const rawLat = params.get('lat');
+  const rawLon = params.get('lon');
+  // Blank counts as missing: Number('') is 0, which would silently
+  // invent a (0, 0) site the URL never asked for.
+  if (rawLat === null || rawLon === null) return null;
+  if (rawLat.trim() === '' || rawLon.trim() === '') return null;
+  const latitude = Number(rawLat);
+  const longitude = Number(rawLon);
+  if (!Number.isFinite(latitude) || latitude < -90 || latitude > 90) return null;
+  if (!Number.isFinite(longitude) || longitude < -180 || longitude > 180) return null;
+  const label = customSiteLabel(latitude, longitude);
+  return { id: CUSTOM_SITE_ID, name: label, siteName: label, latitude, longitude };
+}
+
+/**
+ * Resolve which site the navigator shows for a query string.
+ * Precedence: a valid ?lat=&lon= pair wins over ?site=; otherwise the
+ * named site, else the default site. Never throws for bad input.
+ */
+export function resolveNavigatorSite(params: URLSearchParams): NavigatorSiteOption {
+  const custom = parseCustomSite(params);
+  if (custom) return custom;
+  const options = navigatorSiteOptions();
+  const rawSite = params.get('site');
+  return (
+    options.find((o) => o.id === rawSite) ??
+    options.find((o) => o.id === DEFAULT_SITE_ID) ??
+    options[0]
+  );
+}
 
 export interface NavigatorSiteOption {
   id: string;
@@ -114,12 +170,7 @@ export function useNavigatorState(): {
   const [params, setParams] = useSearchParams();
 
   const state = useMemo<NavigatorState>(() => {
-    const options = navigatorSiteOptions();
-    const rawSite = params.get('site');
-    const site =
-      options.find((o) => o.id === rawSite) ??
-      options.find((o) => o.id === DEFAULT_SITE_ID) ??
-      options[0];
+    const site = resolveNavigatorSite(params);
     const days = parseDays(params.get('days'));
     const windowHours = days * 24;
     const windowStart = parseDate(params.get('t'));
@@ -145,7 +196,17 @@ export function useNavigatorState(): {
       setParams(
         (prev) => {
           const next = new URLSearchParams(prev);
-          if (patch.siteId !== undefined) next.set('site', patch.siteId);
+          if (patch.siteId !== undefined) {
+            next.set('site', patch.siteId);
+            // A named site replaces a custom point: drop ?lat=&lon=, or
+            // the pair would keep overriding the chosen site. lat/lon
+            // are otherwise preserved (all other patches keep them, so
+            // the copied shareable link still carries the custom point).
+            if (patch.siteId !== CUSTOM_SITE_ID) {
+              next.delete('lat');
+              next.delete('lon');
+            }
+          }
           if (patch.windowStart !== undefined) {
             next.set('t', patch.windowStart.toISOString());
             // A new window starts at its beginning.
